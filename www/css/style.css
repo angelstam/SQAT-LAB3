@@ -1,0 +1,81 @@
+html,body
+{ 
+	/* This defines the dafault settings for the entire page. */
+	font-size: 1em;
+	margin: 0;
+	color: rgb(99,99,99);
+}
+
+#wrapper
+{
+}
+
+#orderInput
+{
+	padding: 10px;
+	background-color: gray;
+	text-align: center;
+}
+
+#orderInput input
+{
+	text-align: center;
+	display: inline-block;
+}
+
+#error
+{
+	font-family: Arial;
+	margin: 10%;
+	text-align: center;
+	font-size: 2em;
+}
+
+#result
+{
+	font-family: Arial;
+	margin: 10%;
+	text-align: center;
+}
+
+.resultTitle
+{
+	font-size: 1em;
+}
+
+#resultDate
+{
+	font-size: 5em;
+}
+
+#resultWeekDay
+{
+	font-size: 3em;
+}
+
+input
+{
+	border-width: 0px 0px 4px 0px;
+	border-style: solid;
+	font-size: 1em;
+	width: 10em;
+}
+
+input.ng-pristine
+{
+	border-color: Gold;
+}
+
+input.ng-dirty.ng-valid
+{
+	border-color: Green;
+}
+
+input.ng-dirty.ng-invalid
+{
+	border-color: Red;
+}
+
+
+
+
