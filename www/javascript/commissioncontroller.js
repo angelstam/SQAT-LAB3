@@ -1,10 +1,16 @@
-app.controller("CommissionController", function($scope)
+app.controller("CommissionController", function($scope, $http)
 {
 	$scope.locksAmount= 0;
 	$scope.stocksAmount= 0;
 	$scope.barrelsAmount= 0;
+	$scope.soldItemValue= 0;
 	$scope.monthIndex=0;
+	$scope.recievedData=null;
+	$scope.commissionInformation=null;
 	var monthArray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+	var commissionLevel1=0;
+	var commissionLevel2=0;
+	var commissionLevel3=0;
 	$scope.month="Jan";
 	$scope.numberFormat = /^([1-9]{1}|[1-9]{1}[0-9]{1})$/;
 	$scope.errorObject;
@@ -26,12 +32,37 @@ app.controller("CommissionController", function($scope)
 			$scope.monthIndex=0;
 			$scope.month=monthArray[$scope.monthIndex];
 		}
+
+		$scope.calculateCommission($scope.locksAmount,$scope.stocksAmount,$scope.barrelsAmount);
+
 		$scope.locksAmount=0;
 		$scope.stocksAmount=0;
 		$scope.barrelsAmount=0;
 	}
 
-	$scope.calculateCommission=function(locks,stocks,barrels){
+	$scope.getStuff=function(){
+		$http({method: 'GET', url: 'json.php?target=salespersons'}).
+		  success(function (data, status, headers, config) {
+		    $scope.recievedData=data;
+		}).
+		error(function (data, status, headers, config) {
+		    // ...
+		});
+	}
 
+	$scope.calculateCommission=function(locks,stocks,barrels){
+		$http({method: 'GET', url: 'json.php?target=commissionLevels'}).
+		  success(function (data, status, headers, config) {
+		   	$scope.commissionInformation=data;
+		}).
+		error(function (data, status, headers, config) {
+		    // ...
+		});
+		commissionLevel1=$scope.commissionInformation[0][0];
+		commissionLevel2=$scope.commissionInformation[0][1];
+		commissionLevel3=$scope.commissionInformation[0][2];
+
+		$scope.soldItemValue=((locks*45)+(stocks*30)+(barrels*25));
+		alert($scope.soldItemValue);
 	}
 });

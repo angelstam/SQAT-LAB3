@@ -7,19 +7,33 @@ html,body
 	font-family: Arial;
 }
 
-#orderInput
+#orderInput,#locationInformation
 {
 	padding: 10px;
 	background-color: gray;
 	text-align: center;
+}
 
+#locationInformation
+{
+	width:20%;
+}
+
+#orderInput
+{
+	width:50%;
+	border:2px solid;
+	border-radius:15px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #orderInput input
 {
 	text-align: center;
 	display: inline-block;
-	width:15%;
+	width:32%;
+	
 }
 
 #actionButtons{

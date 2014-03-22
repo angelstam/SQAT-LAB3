@@ -15,9 +15,11 @@
 
 	<body>
 		<div id="wrapper" ng-app="CommissionApp" ng-controller="CommissionController">
-			<form name="orderForm" novalidate id="orderInput">	
+			<form name="orderForm1" novalidate id="locationInformation">
 				<input type="text" name="monthInput" ng-model="monthInput" placeholder="{{month}}" required />
 				<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
+			</form>
+			<form name="orderForm2" novalidate id="orderInput">
 				<input type="number" name="inputLocks" ng-model="inputLocks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
 				<input type="number" name="inputStocks" ng-model="inputStocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
 				<input type="number" name="inputBarrels" ng-model="inputBarrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
@@ -29,6 +31,7 @@
 				<div id="actionButtons">
 					<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
 					<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth(inputTown,monthInput,inputLocks,inputStocks,inputBarrels)">End monthly sales</button>
+					<button id="getButton" ng-model="getButton" ng-click="getStuff()">Get Shit</button>
 				</div>
 				<div id="tableWrapper">
 					<text id="tableLogo">Ordered Items</text>

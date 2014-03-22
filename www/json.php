@@ -30,6 +30,10 @@ if (isset($_GET['target']))
 	{
 		$result = $db->query("SELECT * FROM orders");
 	}
+	else if ($_GET['target'] == "commissionLevels")
+	{
+		$result = $db->query("SELECT * FROM commissionlevels");
+	}
 }
 
 // Always check that $result is not an error
