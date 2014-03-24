@@ -14,18 +14,18 @@ html,body
 	text-align: center;
 }
 
-#locationInformation
-{
-	width:20%;
-}
-
-#orderInput
+#orderInput,#locationInformation
 {
 	width:50%;
 	border:2px solid;
 	border-radius:15px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#locationInformation
+{
+	width:12em;
 }
 
 #orderInput input
@@ -87,12 +87,11 @@ html,body
 	margin-right: auto;
 }
 
-input
+#wrapper input
 {
-	border-width: 0px 0px 4px 0px;
-	border-style: solid;
 	font-size: 1em;
 	width: 10em;
+	margin-bottom: 0;
 }
 
 input.ng-pristine

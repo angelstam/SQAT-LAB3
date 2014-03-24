@@ -44,7 +44,8 @@ app.controller("CommissionController", function($scope, $http)
 	$scope.getTotalSoldValue=function(year,month){
 		$http({method: 'GET', url: 'json.php?target=totalSoldValue&year='+year+'&month='+month}).
 		success(function (data, status, headers, config) {
-		    $scope.totalSoldValue=data;
+			
+		    $scope.recievedData=data;
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -54,7 +55,7 @@ app.controller("CommissionController", function($scope, $http)
 	$scope.getStuff=function(){
 		$http({method: 'GET', url: 'json.php?target=orders'}).
 		success(function (data, status, headers, config) {
-		    $scope.recievedData=data;
+		    $scope.recievedData=data
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -73,7 +74,5 @@ app.controller("CommissionController", function($scope, $http)
 		commissionLevel1=$scope.commissionInformation[0][0];
 		commissionLevel2=$scope.commissionInformation[0][1];
 		commissionLevel3=$scope.commissionInformation[0][2];
-
-		alert($scope.soldItemValue);
 	}
 });
