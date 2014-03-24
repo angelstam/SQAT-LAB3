@@ -41,7 +41,7 @@ app.controller("CommissionController", function($scope, $http)
 	}
 
 	$scope.getStuff=function(){
-		$http({method: 'GET', url: 'json.php?target=salespersons'}).
+		$http({method: 'GET', url: 'json.php?target=orders'}).
 		  success(function (data, status, headers, config) {
 		    $scope.recievedData=data;
 		}).

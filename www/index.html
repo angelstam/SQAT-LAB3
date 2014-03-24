@@ -41,10 +41,10 @@
 							<th id="stocksColumn">Stocks</th>
 							<th id="barrelsColumn">Barrels</th>
 						</tr>
-						<tr>
-						  <td id="locksAmount">{{locksAmount}}</td>
-						  <td id="stocksAmount">{{stocksAmount}}</td> 
-						  <td id="barrelsAmount">{{barrelsAmount}}</td>
+						<tr ng-repeat="dataRow in recievedData">
+						  <td>{{dataRow.locks}}</td>
+						  <td>{{dataRow.stocks}}</td> 
+						  <td>{{dataRow.barrels}}</td>
 						</tr>
 					</table>
 				</div>

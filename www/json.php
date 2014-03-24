@@ -3,7 +3,7 @@ require_once 'MDB2.php';
 
 $user = 'orderuser';
 $pass = 'secret';
-$host = 'localhost';
+$host = '127.0.0.1';
 $db_name = 'commissionlab';
 
 // Data Source Name: This is the universal connection string
@@ -41,7 +41,7 @@ if (MDB2::isError($result)) {
     die ($result->getMessage());
 }
 
-echo json_encode($result->fetchAll());
+echo json_encode($result->fetchAll(MDB2_FETCHMODE_ASSOC));
 
 // close conection
 $db->disconnect();
