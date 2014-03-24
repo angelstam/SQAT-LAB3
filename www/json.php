@@ -30,6 +30,16 @@ if (isset($_GET['target']))
 	{
 		$result = $db->query("SELECT * FROM orders");
 	}
+	else if ($_GET['target'] == "totalSoldValue")
+	{
+		$result = $db->query("SELECT 
+			(orders.locks*prices.locks)+
+			(orders.stocks*prices.stocks)+
+			(orders.barrels*prices.barrels) as totalSoldAmount 
+			FROM orders,prices 
+			WHERE MONTH(date)=".$_GET['month']."
+			AND YEAR(date)=".$_GET['year']);
+	}
 	else if ($_GET['target'] == "commissionLevels")
 	{
 		$result = $db->query("SELECT * FROM commissionlevels");

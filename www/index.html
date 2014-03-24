@@ -31,7 +31,7 @@
 				<div id="actionButtons">
 					<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
 					<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth(inputTown,monthInput,inputLocks,inputStocks,inputBarrels)">End monthly sales</button>
-					<button id="getButton" ng-model="getButton" ng-click="getStuff()">Get Shit</button>
+					<button id="getButton" ng-model="getButton" ng-click="getTotalSoldValue(2014,03)">Get Shit</button>
 				</div>
 				<div id="tableWrapper">
 					<text id="tableLogo">Ordered Items</text>
@@ -42,12 +42,13 @@
 							<th id="barrelsColumn">Barrels</th>
 						</tr>
 						<tr>
-						  <td id="locksAmount">{{locksAmount}}</td>
-						  <td id="stocksAmount">{{stocksAmount}}</td> 
-						  <td id="barrelsAmount">{{barrelsAmount}}</td>
+							<td id="locksAmount">{{locksAmount}}</td>
+							<td id="stocksAmount">{{stocksAmount}}</td> 
+							<td id="barrelsAmount">{{barrelsAmount}}</td>
 						</tr>
 					</table>
 				</div>
+				{{recievedData}}
 			</div>
 		</div>
 	</body>
