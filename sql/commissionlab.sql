@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `commissionlab` /*!40100 DEFAULT CHARACTER SET ut
 USE `commissionlab`;
 -- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
--- Host: localhost    Database: commissionlab
+-- Host: 127.0.0.1    Database: commissionlab
 -- ------------------------------------------------------
 -- Server version	5.6.16
 
@@ -18,6 +18,20 @@ USE `commissionlab`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `commissionlevels`
+--
+
+DROP TABLE IF EXISTS `commissionlevels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `commissionlevels` (
+  `commissionLevel1` int(11) DEFAULT NULL,
+  `commissionLevel2` int(11) DEFAULT NULL,
+  `commissionLevel3` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `orders`
 --
 
@@ -25,12 +39,26 @@ DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orders` (
-  `Date` date NOT NULL,
-  `Town` varchar(45) DEFAULT NULL,
-  `Locks` int(11) DEFAULT NULL,
-  `Stocks` int(11) DEFAULT NULL,
-  `Barrels` int(11) DEFAULT NULL,
-  PRIMARY KEY (`Date`)
+  `date` date NOT NULL,
+  `town` varchar(45) DEFAULT NULL,
+  `locks` int(11) DEFAULT NULL,
+  `stocks` int(11) DEFAULT NULL,
+  `barrels` int(11) DEFAULT NULL,
+  PRIMARY KEY (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `prices`
+--
+
+DROP TABLE IF EXISTS `prices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prices` (
+  `locks` int(11) DEFAULT NULL,
+  `stocks` int(11) DEFAULT NULL,
+  `barrels` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -59,4 +87,4 @@ CREATE TABLE `salespersons` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 15:53:41
+-- Dump completed on 2014-03-24 14:22:18
