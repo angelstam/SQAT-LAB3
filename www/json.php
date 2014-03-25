@@ -1,5 +1,4 @@
 <?php
-require_once 'MDB2.php';
 
 $user = 'orderuser';
 $pass = 'secret';
@@ -17,6 +16,25 @@ catch(PDOException $e)
     die('ERROR: ' . $e->getMessage());
 }
 
+function getTotalSoldAmount()
+{
+
+	$result = $db->prepare("SELECT
+				(orders.locks*(SELECT itemPrice from items where itemName='locks'))+
+				(orders.stocks*(SELECT itemPrice from items where itemName='stocks'))+
+				(orders.barrels*(SELECT itemPrice from items where itemName='barrels')) as totalSoldAmount
+				FROM orders
+				WHERE MONTH(date) = :month
+				AND YEAR(date) = :year");
+			
+	$result->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+	$result->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+	$result->execute();
+	echo json_encode($result->fetchAll(PDO::FETCH_OBJ));
+
+}
+
+
 try
 {
 	if (isset($_GET['target']))
@@ -25,23 +43,39 @@ try
 		{
 			$result = $db->query("SELECT * FROM salespersons");
 		}
-		else if ($_GET['target'] == "orders")
+		else if ($_GET['target'] == "AddNewOrder")
 		{
-			$result = $db->query("SELECT * FROM orders");
+			//Add a new in the database
+			$result = $db->prepare("INSERT INTO orders Values (:year,:month,:town,:orderedLocks,:orderedStocks,:orderedBarrels)");
+			$result->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
+			$result->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
+			$result->bindParam(':town', $_GET['town'], PDO::PARAM_STR);
+			$result->bindParam(':orderedLocks', $_GET['locks'], PDO::PARAM_INT);
+			$result->bindParam(':orderedStocks', $_GET['stocks'], PDO::PARAM_INT);
+			$result->bindParam(':orderedBarrels', $_GET['barrels'], PDO::PARAM_INT);
+			$result->execute();
+			
+			//Update the item stock table
+			$result = $db->prepare("UPDATE itemStock set locks = locks-:orderedLocks, stocks=stocks-:orderedStocks, barrels=barrels-:orderedBarrels");
+			$result->bindParam(':orderedLocks', $_GET['locks'], PDO::PARAM_INT);
+			$result->bindParam(':orderedStocks', $_GET['stocks'], PDO::PARAM_INT);
+			$result->bindParam(':orderedBarrels', $_GET['barrels'], PDO::PARAM_INT);
+			$result->execute();
 		}
 		else if ($_GET['target'] == "totalSoldValue")
 		{
 			$result = $db->prepare("SELECT
-				(orders.locks*prices.locks)+
-				(orders.stocks*prices.stocks)+
-				(orders.barrels*prices.barrels) as totalSoldAmount
-				FROM orders,prices
+				(orders.locks*(SELECT itemPrice from items where itemName='locks'))+
+				(orders.stocks*(SELECT itemPrice from items where itemName='stocks'))+
+				(orders.barrels*(SELECT itemPrice from items where itemName='barrels')) as totalSoldAmount
+				FROM orders
 				WHERE MONTH(date) = :month
 				AND YEAR(date) = :year");
 			
 			$result->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
 			$result->bindParam(':year', $_GET['year'], PDO::PARAM_INT);
 			$result->execute();
+
 		}
 		else if ($_GET['target'] == "commissionLevels")
 		{
@@ -56,6 +90,4 @@ catch (PDOException $e)
 
 echo json_encode($result->fetchAll(PDO::FETCH_ASSOC));
 
-// close conection
-$db->disconnect();
 ?>

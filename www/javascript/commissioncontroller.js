@@ -13,13 +13,19 @@ app.controller("CommissionController", function($scope, $http)
 	var commissionLevel2=0;
 	var commissionLevel3=0;
 	$scope.month="Jan";
+	$scope.year="Year";
 	$scope.numberFormat = /^([1-9]{1}|[1-9]{1}[0-9]{1})$/;
 	$scope.errorObject;
 
-	$scope.sendOrder=function(town,locks,stocks,barrels){
-		$scope.locksAmount= $scope.locksAmount+locks;
-		$scope.stocksAmount= $scope.stocksAmount+stocks;
-		$scope.barrelsAmount=$scope.barrelsAmount+barrels;
+	$scope.sendOrder=function(year,month,town,locks,stocks,barrels){
+		$http({method: 'GET', url: 'json.php?target=AddNewOrder&year='+year+'&month='+month+'&town='+town+'&locks='+locks+'&stocks='+stocks+'&barrels='+barrels}).
+		success(function (data, status, headers, config) {
+			$scope.recievedData=data;
+			alert("The order was added: "+$scope.recievedData);
+		}).
+		error(function (data, status, headers, config) {
+		    alert("The order failed");
+		});
 	}
 
 	$scope.endMonth=function(town,month,locks,stocks,barrels){
@@ -44,11 +50,9 @@ app.controller("CommissionController", function($scope, $http)
 	$scope.getTotalSoldValue=function(year,month){
 		$http({method: 'GET', url: 'json.php?target=totalSoldValue&year='+year+'&month='+month}).
 		success(function (data, status, headers, config) {
-			alert("JA");
 		    $scope.recievedData=data;
 		}).
 		error(function (data, status, headers, config) {
-			alert("JA");
 		    // ...
 		});
 	}

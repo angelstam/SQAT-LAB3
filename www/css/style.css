@@ -18,7 +18,8 @@ html,body
 }
 
 #locationInformation input{
-	width:40%;
+	display: inline;
+	width:32%;
 }
 
 #orderInput input{

@@ -51,6 +51,7 @@
 			</div>
 			<div id="order">
 				<form name="orderForm1" novalidate id="locationInformation">
+					<input type="text" name="yearInput" ng-model="yearInput" placeholder="{{year}}" required />
 					<input type="text" name="monthInput" ng-model="monthInput" placeholder="{{month}}" required />
 					<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
 				</form>
@@ -65,8 +66,8 @@
 
 				<div id="tableDiv" >
 					<div id="actionButtons">
-						<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
-						<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth(inputTown,monthInput,inputLocks,inputStocks,inputBarrels)">End monthly sales</button>
+						<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(yearInput,monthInput,inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
+						<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
 					</div>
 					<div id="newOrdersTable">
 						<text id="tableLogo">Ordered Items</text>
