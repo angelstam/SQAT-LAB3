@@ -15,31 +15,14 @@
 
 	<body>
 		<div id="wrapper" ng-app="CommissionApp" ng-controller="CommissionController">
-			<form name="orderForm1" novalidate id="locationInformation">
-				<input type="text" name="monthInput" ng-model="monthInput" placeholder="{{month}}" required />
-				<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
-			</form>
-			<form name="orderForm2" novalidate id="orderInput">
-				<input type="number" name="inputLocks" ng-model="inputLocks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
-				<input type="number" name="inputStocks" ng-model="inputStocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
-				<input type="number" name="inputBarrels" ng-model="inputBarrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
-			</form>
-
-			<div id="error" ng-show="errorObject.errorHasOccured">{{errorObject.message}}</div>
-
-			<div id="tableDiv" >
-				<div id="actionButtons">
-					<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
-					<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth(inputTown,monthInput,inputLocks,inputStocks,inputBarrels)">End monthly sales</button>
-					<button id="getButton" ng-model="getButton" ng-click="getTotalSoldValue(2014,03)">Get Shit</button>
-				</div>
-				<div id="tableWrapper">
-					<text id="tableLogo">Ordered Items</text>
-					<table id="orderTable">
+			<div id="options">
+				<div id="stockTable">
+					<text id="tableLogo">Currently in stock</text>
+					<table id="tableOfStock">
 						<tr>
-							<th id="locksColumn">Locks</th>
-							<th id="stocksColumn">Stocks</th>
-							<th id="barrelsColumn">Barrels</th>
+							<th id="locksInStock">Locks</th>
+							<th id="stocksInStock">Stocks</th>
+							<th id="barrelsInStock">Barrels</th>
 						</tr>
 						<tr ng-repeat="dataRow in recievedData">
 						  <td>{{dataRow.locks}}</td>
@@ -48,7 +31,60 @@
 						</tr>
 					</table>
 				</div>
-				{{totalSoldValue}}
+				<div id="completedOrdesTable">
+					<text id="tableLogo">Completed orders</text>
+					<table id="tableOfStock">
+						<tr>
+							<th id="locksInStock">Year</th>
+							<th id="stocksInStock">Month</th>
+							<th id="barrelsInStock">Locks</th>
+							<th id="barrelsInStock">Stocks</th>
+							<th id="barrelsInStock">Barrels</th>
+						</tr>
+						<tr ng-repeat="dataRow in recievedData">
+						  <td>{{dataRow.locks}}</td>
+						  <td>{{dataRow.stocks}}</td> 
+						  <td>{{dataRow.barrels}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="order">
+				<form name="orderForm1" novalidate id="locationInformation">
+					<input type="text" name="monthInput" ng-model="monthInput" placeholder="{{month}}" required />
+					<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
+				</form>
+				<form name="orderForm2" novalidate id="orderInput">
+					<input type="number" name="inputLocks" ng-model="inputLocks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
+					<input type="number" name="inputStocks" ng-model="inputStocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
+					<input type="number" name="inputBarrels" ng-model="inputBarrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
+				</form>
+
+				<div id="error" ng-show="errorObject.errorHasOccured">	{{errorObject.message}}
+				</div>
+
+				<div id="tableDiv" >
+					<div id="actionButtons">
+						<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
+						<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth(inputTown,monthInput,inputLocks,inputStocks,inputBarrels)">End monthly sales</button>
+					</div>
+					<div id="newOrdersTable">
+						<text id="tableLogo">Ordered Items</text>
+						<table id="orderTable">
+							<tr>
+								<th id="locksColumn">Locks</th>
+								<th id="stocksColumn">Stocks</th>
+								<th id="barrelsColumn">Barrels</th>
+							</tr>
+							<tr ng-repeat="dataRow in recievedData">
+							  <td>{{dataRow.locks}}</td>
+							  <td>{{dataRow.stocks}}</td> 
+							  <td>{{dataRow.barrels}}</td>
+							</tr>
+						</table>
+					</div>
+					{{recievedData}}
+				</div>
 			</div>
 		</div>
 	</body>

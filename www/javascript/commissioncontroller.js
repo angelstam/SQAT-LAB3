@@ -44,10 +44,11 @@ app.controller("CommissionController", function($scope, $http)
 	$scope.getTotalSoldValue=function(year,month){
 		$http({method: 'GET', url: 'json.php?target=totalSoldValue&year='+year+'&month='+month}).
 		success(function (data, status, headers, config) {
-			
+			alert("JA");
 		    $scope.recievedData=data;
 		}).
 		error(function (data, status, headers, config) {
+			alert("JA");
 		    // ...
 		});
 	}
