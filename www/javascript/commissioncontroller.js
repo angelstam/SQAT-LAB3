@@ -67,8 +67,8 @@ app.controller("CommissionController", function($scope, $http)
 		});
 	}
 
-	$scope.getStuff=function(){
-		$http({method: 'GET', url: 'json.php?target=orders'}).
+	$scope.getOrders=function(){
+		$http({method: 'GET', url: 'json/order/2014-03'}).
 		success(function (data, status, headers, config) {
 		    $scope.recievedData=data
 		}).

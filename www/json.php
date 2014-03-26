@@ -5,6 +5,10 @@ $pass = 'secret';
 $host = '127.0.0.1';
 $db_name = 'commissionlab';
 
+require("../include/RestService-class.inc");
+require("../include/RestRouteOrder-class.inc");
+require("../include/RestRouteCommission-class.inc");
+
 try
 {
 	// Create a new PDO to connect to the database.
@@ -16,6 +20,13 @@ catch(PDOException $e)
     die('ERROR: ' . $e->getMessage());
 }
 
+$rest = new RestService();
+$rest->addRoute("order", new RestRouteOrder());
+$rest->addRoute("commission", new RestRouteCommission());
+echo json_encode($rest->output());
+exit;
+
+/* TODO: Rewrite as RestRoutes.
 function getTotalSoldAmount()
 {
 
@@ -33,7 +44,6 @@ function getTotalSoldAmount()
 	echo json_encode($result->fetchAll(PDO::FETCH_OBJ));
 
 }
-
 
 try
 {
@@ -99,5 +109,5 @@ catch (PDOException $e)
 }
 
 echo json_encode($result->fetchAll(PDO::FETCH_ASSOC));
-
+*/
 ?>
