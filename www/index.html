@@ -24,7 +24,7 @@
 							<th id="stocksInStock">Stocks</th>
 							<th id="barrelsInStock">Barrels</th>
 						</tr>
-						<tr ng-repeat="dataRow in recievedData">
+						<tr ng-repeat="dataRow in leftInStock">
 						  <td>{{dataRow.locks}}</td>
 						  <td>{{dataRow.stocks}}</td> 
 						  <td>{{dataRow.barrels}}</td>
@@ -77,14 +77,13 @@
 								<th id="stocksColumn">Stocks</th>
 								<th id="barrelsColumn">Barrels</th>
 							</tr>
-							<tr ng-repeat="dataRow in recievedData">
+							<tr ng-repeat="dataRow in currentMonthOrder">
 							  <td>{{dataRow.locks}}</td>
 							  <td>{{dataRow.stocks}}</td> 
 							  <td>{{dataRow.barrels}}</td>
 							</tr>
 						</table>
 					</div>
-					{{recievedData}}
 				</div>
 			</div>
 		</div>
