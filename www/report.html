@@ -1,0 +1,19 @@
+<div id="options">
+	<div id="completedOrdesTable">
+		<text id="tableLogo">Completed orders</text>
+		<table id="tableOfStock">
+			<tr>
+				<th id="locksInStock">Year</th>
+				<th id="stocksInStock">Month</th>
+				<th id="barrelsInStock">Locks</th>
+				<th id="barrelsInStock">Stocks</th>
+				<th id="barrelsInStock">Barrels</th>
+			</tr>
+			<tr ng-repeat="dataRow in recievedData">
+			  <td>{{dataRow.locks}}</td>
+			  <td>{{dataRow.stocks}}</td> 
+			  <td>{{dataRow.barrels}}</td>
+			</tr>
+		</table>
+	</div>
+</div>

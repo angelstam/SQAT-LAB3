@@ -42,7 +42,7 @@ class RestRouteOrder extends RestRoute
 
 		$result = $db->prepare("
 			SELECT
-				 *
+				SUM(locks) as locks, SUM(stocks) as stocks, SUM(barrels) as barrels
 			FROM
 				orders
 			WHERE

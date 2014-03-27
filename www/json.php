@@ -72,11 +72,18 @@ try
 			$result->bindParam(':orderedBarrels', $_GET['barrels'], PDO::PARAM_INT);
 			$result->execute();
 
+			//Retrieving amount of items left in stock
 			$result = $db->prepare("SELECT sum(locks) as locks,sum(stocks) as stocks,sum(barrels) as barrels FROM orders where month=:month GROUP BY month");
 			$result->bindParam(':month', $_GET['month'], PDO::PARAM_INT);
 			$result->execute();
 		}
 		else if ($_GET['target'] == "getStockValue")
+		{
+			//Collecting the amount of items left in stock for the month
+			$result = $db->prepare("SELECT * FROM itemstock");
+			$result->execute();
+		}
+		else if ($_GET['target'] == "updateTables")
 		{
 			//Collecting the amount of items left in stock for the month
 			$result = $db->prepare("SELECT * FROM itemstock");

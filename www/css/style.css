@@ -7,17 +7,25 @@ html,body
 	font-family: Arial;
 }
 
+header{
+	width:31%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+header #modeButtons{
+	width:46%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #options,#order{
 	width:40%;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-#options{
-	margin-top: 10%;
-}
-
-#locationInformation input{
+#locationInformation input,select{
 	display: inline;
 	width:32%;
 }
@@ -28,7 +36,7 @@ html,body
 }
 
 #tableDiv{
-	width:60%;
+	width:80%;
 	margin-right: auto;
 	margin-left: auto;
 }
@@ -38,17 +46,17 @@ html,body
 	margin-right: auto;
 	margin-left: auto;
 }
-input.ng-pristine
+input.ng-pristine,select.ng-pristine
 {
 	border-color: Gold;
 }
 
-input.ng-dirty.ng-valid
+input.ng-dirty.ng-valid,select.ng-dirty.ng-valid
 {
 	border-color: Green;
 }
 
-input.ng-dirty.ng-invalid
+input.ng-dirty.ng-invalid,select.ng-dirty.ng-invalid
 {
 	border-color: Red;
 }

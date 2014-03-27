@@ -1,0 +1,60 @@
+<div id="options">
+	<div id="stockTable">
+		<text id="tableLogo">Currently in stock</text>
+		<table id="tableOfStock">
+			<tr>
+				<th id="locksInStock">Locks</th>
+				<th id="stocksInStock">Stocks</th>
+				<th id="barrelsInStock">Barrels</th>
+			</tr>
+			<tr ng-repeat="dataRow in leftInStock">
+			  <td>{{dataRow.locks}}</td>
+			  <td>{{dataRow.stocks}}</td> 
+			  <td>{{dataRow.barrels}}</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="newOrdersTable">
+		<text id="tableLogo">Ordered Items</text>
+		<table id="orderTable">
+			<tr>
+				<th id="locksColumn">Locks</th>
+				<th id="stocksColumn">Stocks</th>
+				<th id="barrelsColumn">Barrels</th>
+			</tr>
+			<tr ng-repeat="dataRow in currentMonthOrder">
+			  <td>{{dataRow.locks}}</td>
+			  <td>{{dataRow.stocks}}</td> 
+			  <td>{{dataRow.barrels}}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div id="order">
+		<form name="orderForm1" novalidate id="locationInformation">
+			<input type="text" name="yearInput" ng-model="yearInput" placeholder="{{year}}" required />
+
+			<select type="text" name="selectMonth" ng-model='selectMonth' ng-init="selectMonth=1" ng-options="obj.id as obj.name for obj in monthArray" required />
+
+			<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
+		</form>
+		<form name="orderForm2" novalidate id="orderInput">
+			<input type="number" name="inputLocks" ng-model="inputLocks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" name="inputStocks" ng-model="inputStocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" name="inputBarrels" ng-model="inputBarrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
+		</form>
+
+		<div id="error" ng-show="errorObject.errorHasOccured">	{{errorObject.message}}
+		</div>
+
+		<div id="tableDiv" >
+			<div id="actionButtons">
+				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(yearInput,monthInput,inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
+				<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
+				<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
+			</div>
+		</div>
+	</div>
+</div>
