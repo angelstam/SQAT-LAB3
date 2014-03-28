@@ -61,6 +61,10 @@ input.ng-dirty.ng-invalid,select.ng-dirty.ng-invalid
 	border-color: Red;
 }
 
-
+#openMonthTabs button
+{
+	display: inline-block;
+	width: auto;
+}
 
 

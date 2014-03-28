@@ -34,7 +34,7 @@ commissionApp.controller("orderController", function($scope, $http)
 	$scope.recievedData=null;
 	$scope.currentMonthOrder=null;
 	$scope.leftInStock=null;
-	$scope.monthArray=[{name:'January',id:1},{name:'February',id:2},{name:'Mars',id:3},{name:'April',id:4},{name:'May',id:5},{name:'June',id:6},{name:'July',id:7},{name:'August',id:8},{name:'Sepember',id:9},{name:'October',id:10},{name:'November',id:11},{name:'December',id:12}];
+	$scope.monthArray=[{name:'January',id:'01'},{name:'February',id:'02'},{name:'Mars',id:'03'},{name:'April',id:'04'},{name:'May',id:'05'},{name:'June',id:'06'},{name:'July',id:'07'},{name:'August',id:'08'},{name:'Sepember',id:'09'},{name:'October',id:'10'},{name:'November',id:'11'},{name:'December',id:'12'}];
 	$scope.commissionInformation=null;
 	$scope.month="Jan";
 	$scope.year="Year";
@@ -45,6 +45,10 @@ commissionApp.controller("orderController", function($scope, $http)
 	$scope.openMonthSelected;
 
 	$scope.isReportMode = false;
+
+	$scope.setCurrentOpenOrderMonth=function(rowId){
+		$scope.openMonthSelected = rowId;
+	}
 
 	$scope.sendOrder=function(year,month,town,locks,stocks,barrels){
 		$http({method: 'GET', url: 'json.php?target=AddNewOrder&year='+year+'&month='+month+'&town='+town+'&locks='+locks+'&stocks='+stocks+'&barrels='+barrels}).
@@ -94,6 +98,17 @@ commissionApp.controller("orderController", function($scope, $http)
 		});
 	}
 
+	$scope.getMonths=function(month){
+		$http({method: 'GET', url: 'json/order'}).
+		success(function (data, status, headers, config) {
+		    $scope.openMonths=data;
+		}).
+		error(function (data, status, headers, config) {
+		    // ...
+		});
+	}
+	$scope.getMonths();
+
 	$scope.getOrders=function(month){
 		$http({method: 'GET', url: 'json/order/'+month}).
 		success(function (data, status, headers, config) {
@@ -103,6 +118,7 @@ commissionApp.controller("orderController", function($scope, $http)
 		error(function (data, status, headers, config) {
 		    // ...
 		});
+		$scope.getMonths();
 	}
 
 	$scope.update=function()
