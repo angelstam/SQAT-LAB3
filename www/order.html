@@ -37,24 +37,18 @@
 
 <div id="order">
 		<form name="orderForm1" novalidate id="locationInformation">
-			<input type="text" name="yearInput" ng-model="yearInput" placeholder="{{year}}" required />
-
-			<select type="text" name="selectMonth" ng-model='selectMonth' ng-init="selectMonth='01'" ng-options="obj.id as obj.name for obj in monthArray" required />
-
-			<input type="text" name="inputTown" ng-model="inputTown" placeholder="Town" required />
-		</form>
-		<form name="orderForm2" novalidate id="orderInput">
-			<input type="number" name="inputLocks" ng-model="inputLocks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
-			<input type="number" name="inputStocks" ng-model="inputStocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
-			<input type="number" name="inputBarrels" ng-model="inputBarrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="text" ng-model="form.date" placeholder="Date" required />
+			<input type="text" ng-model="form.town" placeholder="Town" required />
+			<input type="number" ng-model="form.locks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" ng-model="form.stocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" ng-model="form.barrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
 		</form>
 
 		<div id="error" ng-show="errorObject.errorHasOccured">	{{errorObject.message}}
 		</div>
-
 		<div id="tableDiv" >
 			<div id="actionButtons">
-				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(yearInput,monthInput,inputTown,inputLocks,inputStocks,inputBarrels)">Place Order</button>
+				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(form)">Place Order</button>
 				<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
 				<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
 			</div>

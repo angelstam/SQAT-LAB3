@@ -45,7 +45,7 @@ class RestService
 				
 				// Serve put requests
 				case 'POST':
-					$output = $this->routes[$route_name]->put($p);
+					$output = $this->routes[$route_name]->put($p, json_decode(file_get_contents("php://input")));
 					break;
 				
 				// Non supported request methods

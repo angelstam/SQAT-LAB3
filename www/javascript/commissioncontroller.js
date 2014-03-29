@@ -50,8 +50,8 @@ commissionApp.controller("orderController", function($scope, $http)
 		$scope.openMonthSelected = rowId;
 	}
 
-	$scope.sendOrder=function(year,month,town,locks,stocks,barrels){
-		$http({method: 'GET', url: 'json.php?target=AddNewOrder&year='+year+'&month='+month+'&town='+town+'&locks='+locks+'&stocks='+stocks+'&barrels='+barrels}).
+	$scope.sendOrder=function(formData){
+		$http({method: 'POST', url: 'json/order', data: formData}).
 		success(function (data, status, headers, config) {
 			$scope.currentMonthOrder=data;
 			alert("The order was added:");
