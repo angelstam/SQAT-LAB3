@@ -1,7 +1,8 @@
 <div id="options">
 	<div>
-		<button id="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
+		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
 	</div>
+	<div id="currentMonth" ng-hide="openMonthSelected == null">
 	<div id="stockTable">
 		<text id="tableLogo">Currently in stock</text>
 		<table id="tableOfStock">
@@ -22,20 +23,26 @@
 		<text id="tableLogo">Ordered Items</text>
 		<table id="orderTable">
 			<tr>
+				<th>Date</th>
+				<th>Town</th>
 				<th id="locksColumn">Locks</th>
 				<th id="stocksColumn">Stocks</th>
 				<th id="barrelsColumn">Barrels</th>
 			</tr>
 			<tr ng-repeat="dataRow in currentMonthOrder">
+			  <td>{{dataRow.date}}</td>
+			  <td>{{dataRow.town}}</td>
 			  <td>{{dataRow.locks}}</td>
 			  <td>{{dataRow.stocks}}</td> 
 			  <td>{{dataRow.barrels}}</td>
 			</tr>
 		</table>
 	</div>
+	</div>
 </div>
 
 <div id="order">
+		<text id="tableLogo">Create new order</text>
 		<form name="orderForm1" novalidate id="locationInformation">
 			<input type="text" ng-model="form.date" placeholder="Date" required />
 			<input type="text" ng-model="form.town" placeholder="Town" required />

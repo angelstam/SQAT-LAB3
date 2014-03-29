@@ -7,39 +7,55 @@ html,body
 	font-family: Arial;
 }
 
-header{
+header
+{
 	width:31%;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-header #modeButtons{
-	width:46%;
+header #modeButtons
+{
 	margin-left: auto;
 	margin-right: auto;
 }
 
-#options,#order{
+#main
+{
+	margin-left: auto;
+	margin-right: auto;
 	width:40%;
-	margin-left: auto;
-	margin-right: auto;
 }
 
-#locationInformation input, select{
+#currentMonth, #order
+{
+	border: 5px solid #2BA6CB;
+}
+
+.openMonthTabs
+{
+	margin: 0;
+}
+
+#locationInformation input, select
+{
 	display: inline;
 	width:32%;
 }
 
-#locationInformation select{
+#locationInformation select
+{
 	margin-right: 4px;
 }
 
-#orderInput input{
+#orderInput input
+{
 	width:32%;
 	display: inline;
 }
 
-#tableDiv{
+#tableDiv
+{
 	width:80%;
 	margin-right: auto;
 	margin-left: auto;
@@ -50,6 +66,17 @@ header #modeButtons{
 	margin-right: auto;
 	margin-left: auto;
 }
+
+table
+{
+	width: 100%;
+}
+
+th
+{
+	text-align: left;
+}
+
 input.ng-pristine,select.ng-pristine
 {
 	border-color: Gold;

@@ -1,14 +1,15 @@
 USE `commissionlab`;
 CREATE  OR REPLACE VIEW `commissionlab`.`completed_month_totals` AS
 SELECT
-    YEAR(date) AS year,
-    MONTH(date) AS month,
-    SUM(locks) AS locks,
-    SUM(stocks) AS stocks,
-    SUM(barrels) AS barrels
+    completed_months.year,
+    completed_months.month,
+    month_totals.yearmonth,
+    locks,
+    stocks,
+    barrels
 FROM
     completed_months
-    LEFT JOIN orders ON YEAR(orders.date) = year AND MONTH(orders.date) = month
+    LEFT JOIN month_totals ON completed_months.year = month_totals.year AND completed_months.month = month_totals.month
 GROUP BY
-    year,
-    month;
+    completed_months.year,
+    completed_months.month;

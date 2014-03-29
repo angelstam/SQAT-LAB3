@@ -25,11 +25,14 @@ app.controller("orderController", function($scope, $http)
 
 	$scope.isReportMode = false;
 
-	$scope.setCurrentOpenOrderMonth=function(rowId){
-		//$scope.openMonthSelected = rowId;
+	$scope.getOpenMonthSelected=function(){
+		return $scope.openMonths[$scope.openMonthSelected].month;
+	}
 
-		$scope.getOrders($scope.openMonths[rowId].year,$scope.openMonths[rowId].month);
-		
+	$scope.setCurrentOpenOrderMonth=function(rowId){
+		$scope.openMonthSelected = rowId;
+
+		$scope.getOrders($scope.getOpenMonthSelected());
 	}
 
 	$scope.sendOrder=function(formData){

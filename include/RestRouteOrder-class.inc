@@ -35,17 +35,9 @@ class RestRouteOrder extends RestRoute
 
 		$result = $db->query("
 			SELECT
-				DATE_FORMAT(date, '%Y-%m') as month,
-				itemstock.stocks,
-				itemstock.locks,
-				itemstock.barrels
-			FROM
-				orders
-				LEFT JOIN itemstock ON
-					YEAR(orders.date) = itemstock.year
-					AND MONTH(orders.date) = itemstock.month
-			GROUP BY
 				month
+			FROM
+				open_month_totals
 			");
 
 		return $result->fetchAll(PDO::FETCH_ASSOC);
@@ -57,7 +49,7 @@ class RestRouteOrder extends RestRoute
 
 		$result = $db->prepare("
 			SELECT
-				SUM(locks) as locks, SUM(stocks) as stocks, SUM(barrels) as barrels
+				date, town, locks, stocks, barrels
 			FROM
 				orders
 			WHERE
