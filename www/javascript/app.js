@@ -1,4 +1,27 @@
-var app = angular.module('CommissionApp', []);
+var app = angular.module('commissionApp', ['ngRoute']);
+
+// configure our routes
+app.config(function($routeProvider) {
+	$routeProvider
+
+	// route for the order page
+		.when('/', {
+			templateUrl : 'order.html',
+			controller  : 'orderController'
+		})
+
+		// route for the order page
+		.when('/order', {
+			templateUrl : 'order.html',
+			controller  : 'orderController'
+		})
+
+		// route for the report page
+		.when('/report', {
+			templateUrl : 'report.html',
+			controller  : 'reportController'
+		})
+});
 
 app.filter("pad", function()
 {

@@ -25,9 +25,13 @@ header #modeButtons{
 	margin-right: auto;
 }
 
-#locationInformation input,select{
+#locationInformation input, select{
 	display: inline;
 	width:32%;
+}
+
+#locationInformation select{
+	margin-right: 4px;
 }
 
 #orderInput input{

@@ -1,33 +1,11 @@
-var commissionApp = angular.module('commissionApp', ['ngRoute']);
-
-// configure our routes
-	commissionApp.config(function($routeProvider) {
-		$routeProvider
-
-		// route for the order page
-			.when('/', {
-				templateUrl : 'order.html',
-				controller  : 'orderController'
-			})
-
-			// route for the order page
-			.when('/order', {
-				templateUrl : 'order.html',
-				controller  : 'orderController'
-			})
-
-			// route for the report page
-			.when('/report', {
-				templateUrl : 'report.html',
-				controller  : 'reportController'
-			})
-	});
-
-commissionApp.controller("orderController", function($scope, $http)
+app.controller("orderController", function($scope, $http)
 {
-	$scope.locksAmount= 0;
-	$scope.stocksAmount= 0;
-	$scope.barrelsAmount= 0;
+	$scope.locksMax= 70;
+	$scope.stocksMax= 80;
+	$scope.barrelsMax= 90;
+	$scope.locksLeft=0;
+	$scope.stocksLeft=0;
+	$scope.barrelsLeft=0;
 	$scope.soldItemValue= 0;
 	$scope.totalSoldValue=0;
 	$scope.monthIndex=0;
@@ -40,6 +18,7 @@ commissionApp.controller("orderController", function($scope, $http)
 	$scope.year="Year";
 	$scope.numberFormat = /^([1-9]{1}|[1-9]{1}[0-9]{1})$/;
 	$scope.errorObject;
+	$scope.endedMonthsData
 
 	$scope.openMonths; // Months currently open for new orders
 	$scope.openMonthSelected;
@@ -47,7 +26,10 @@ commissionApp.controller("orderController", function($scope, $http)
 	$scope.isReportMode = false;
 
 	$scope.setCurrentOpenOrderMonth=function(rowId){
-		$scope.openMonthSelected = rowId;
+		//$scope.openMonthSelected = rowId;
+
+		$scope.getOrders($scope.openMonths[rowId].year,$scope.openMonths[rowId].month);
+		
 	}
 
 	$scope.sendOrder=function(formData){
@@ -98,7 +80,7 @@ commissionApp.controller("orderController", function($scope, $http)
 		});
 	}
 
-	$scope.getMonths=function(month){
+	$scope.getMonths=function(){
 		$http({method: 'GET', url: 'json/order'}).
 		success(function (data, status, headers, config) {
 		    $scope.openMonths=data;
@@ -113,7 +95,7 @@ commissionApp.controller("orderController", function($scope, $http)
 		$http({method: 'GET', url: 'json/order/'+month}).
 		success(function (data, status, headers, config) {
 		    $scope.currentMonthOrder=data;
-		     alert($scope.currentMonthOrder);
+		    $scope.calculateItemsLeftInStock($scope.currentMonthOrder[0].locks,$scope.currentMonthOrder[0].stocks,$scope.currentMonthOrder[0].barrels);
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -151,32 +133,39 @@ commissionApp.controller("orderController", function($scope, $http)
 		});
 	}
 
-	$scope.calculateCommission=function(locks,stocks,barrels){
-		$http({method: 'GET', url: 'json.php?target=totalSoldValue'}).
-		  success(function (data, status, headers, config) {
-		   	$scope.commissionInformation=data;
+	$scope.calculateItemsLeftInStock=function(locksSold,stocksSold,barrelsSold){
+		$scope.locksLeft=$scope.locksMax-locksSold;
+		$scope.stocksLeft=$scope.stocksMax-stocksSold;
+		$scope.barrelsLeft=$scope.barrelsMax-barrelsSold;
+	}
+});
+
+app.controller("reportController", function($scope, $http)
+{
+	$scope.commissionlevel1=0.1;
+	$scope.commissionlevel2=0.15;
+	$scope.commissionlevel3=0.2;
+	$scope.locksPrice=45;
+	$scope.stocksPrice=30;
+	$scope.barrelsPrice=25;
+	$scope.getEndedMonths=function(){
+		$http({method: 'GET', url: 'json/commission'}).
+		success(function (data, status, headers, config) {
+		    $scope.endedMonthsData=data;
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
 		});
-
-		commissionLevel1=$scope.commissionInformation[0][0];
-		commissionLevel2=$scope.commissionInformation[0][1];
-		commissionLevel3=$scope.commissionInformation[0][2];
 	}
 
+	$scope.calculateCommission=function(locks,stocks,barrels){
+		var totalSoldSum= (locks*$scope.locksPrice)+(stocks*$scope.stocksPrice)+(barrels*$scope.barrelsPrice);
+		if(totalSoldSum<=1000){
+			return "$"+($scope.commissionlevel1*totalSoldSum);
+		}else if(totalSoldSum<=1800){
+			return "$"+($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(totalSoldSum-1000));
+		}else{
+			return "$"+($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(800)+$scope.commissionlevel3*(totalSoldSum-1800));
+		}
+	}
 });
-
-commissionApp.controller("reportController", function($scope, $http)
-{
-
-
-});
-
-/*
-commissionApp.controller("CommissionController", function($scope, $http)
-{
-	
-
-});
-*/

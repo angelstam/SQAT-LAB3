@@ -8,12 +8,19 @@
 				<th id="barrelsInStock">Locks</th>
 				<th id="barrelsInStock">Stocks</th>
 				<th id="barrelsInStock">Barrels</th>
+				<th id="barrelsInStock">Commission</th>
 			</tr>
-			<tr ng-repeat="dataRow in recievedData">
-			  <td>{{dataRow.locks}}</td>
-			  <td>{{dataRow.stocks}}</td> 
-			  <td>{{dataRow.barrels}}</td>
+			<tr ng-repeat="dataRow in endedMonthsData">
+				<td>{{dataRow.year}}</td>
+			  	<td>{{dataRow.month}}</td> 
+			  	<td>{{dataRow.locks}}</td>
+			  	<td>{{dataRow.stocks}}</td> 
+			  	<td>{{dataRow.barrels}}</td>
+			  	<td>{{calculateCommission(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
 			</tr>
 		</table>
+		<div id="actionButtons">
+			<button id="updateTables" ng-model="getReport" ng-click="getEndedMonths()">Update</button>
+		</div>
 	</div>
 </div>
