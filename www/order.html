@@ -3,42 +3,43 @@
 		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
 	</div>
 	<div id="currentMonth" ng-hide="openMonthSelected == null">
-	<div id="stockTable">
-		<text id="tableLogo">Currently in stock</text>
-		<table id="tableOfStock">
-			<tr>
-				<th id="locksInStock">Locks</th>
-				<th id="stocksInStock">Stocks</th>
-				<th id="barrelsInStock">Barrels</th>
-			</tr>
-			<tr>
-			  <td>{{locksLeft}}</td>
-			  <td>{{stocksLeft}}</td>
-			  <td>{{barrelsLeft}}</td>
-			</tr>
-		</table>
+		<div id="stockTable">
+			<text id="tableLogo">Currently in stock</text>
+			<table id="tableOfStock">
+				<tr>
+					<th id="locksInStock">Locks</th>
+					<th id="stocksInStock">Stocks</th>
+					<th id="barrelsInStock">Barrels</th>
+				</tr>
+				<tr>
+				  <td>{{locksLeft}}</td>
+				  <td>{{stocksLeft}}</td>
+				  <td>{{barrelsLeft}}</td>
+				</tr>
+			</table>
+		</div>
+		<div id="newOrdersTable">
+			<text id="tableLogo">Ordered Items</text>
+			<table id="orderTable">
+				<tr>
+					<th>Date</th>
+					<th>Town</th>
+					<th id="locksColumn">Locks</th>
+					<th id="stocksColumn">Stocks</th>
+					<th id="barrelsColumn">Barrels</th>
+				</tr>
+				<tr ng-repeat="dataRow in currentMonthOrder">
+				  <td>{{dataRow.date}}</td>
+				  <td>{{dataRow.town}}</td>
+				  <td>{{dataRow.locks}}</td>
+				  <td>{{dataRow.stocks}}</td>
+				  <td>{{dataRow.barrels}}</td>
+				</tr>
+			</table>
+		</div>
+		<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendEndMonth(getOpenMonthSelected())">End monthly sales</button>
 	</div>
-	
-	<div id="newOrdersTable">
-		<text id="tableLogo">Ordered Items</text>
-		<table id="orderTable">
-			<tr>
-				<th>Date</th>
-				<th>Town</th>
-				<th id="locksColumn">Locks</th>
-				<th id="stocksColumn">Stocks</th>
-				<th id="barrelsColumn">Barrels</th>
-			</tr>
-			<tr ng-repeat="dataRow in currentMonthOrder">
-			  <td>{{dataRow.date}}</td>
-			  <td>{{dataRow.town}}</td>
-			  <td>{{dataRow.locks}}</td>
-			  <td>{{dataRow.stocks}}</td> 
-			  <td>{{dataRow.barrels}}</td>
-			</tr>
-		</table>
-	</div>
-	</div>
+	<div id="noCurrentMonth" ng-show="openMonthSelected == null"> Select month to show orders. </div>
 </div>
 
 <div id="order">
@@ -56,7 +57,6 @@
 		<div id="tableDiv" >
 			<div id="actionButtons">
 				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(form)">Place Order</button>
-				<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
 				<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
 			</div>
 		</div>
