@@ -97,8 +97,9 @@ app.controller("orderController", function($scope, $http)
 	$scope.getOrders=function(month){
 		$http({method: 'GET', url: 'json/order/'+month}).
 		success(function (data, status, headers, config) {
-		    $scope.currentMonthOrder=data;
-		    $scope.calculateItemsLeftInStock($scope.currentMonthOrder[0].locks,$scope.currentMonthOrder[0].stocks,$scope.currentMonthOrder[0].barrels);
+		   $scope.currentMonthOrder=data;
+		    
+		   $scope.calculateItemsLeftInStock($scope.currentMonthOrder);
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -136,10 +137,21 @@ app.controller("orderController", function($scope, $http)
 		});
 	}
 
-	$scope.calculateItemsLeftInStock=function(locksSold,stocksSold,barrelsSold){
-		$scope.locksLeft=$scope.locksMax-locksSold;
-		$scope.stocksLeft=$scope.stocksMax-stocksSold;
-		$scope.barrelsLeft=$scope.barrelsMax-barrelsSold;
+	$scope.calculateItemsLeftInStock=function(soldItems){
+		var totalAmountOfLocks=0;
+		var totalAmountOfStocks=0;
+		var totalAmountOfBarrels=0;
+
+		for (var i=0;i<soldItems.length;i++)
+		{	
+			totalAmountOfLocks=totalAmountOfLocks+parseInt(soldItems[i].locks);
+			totalAmountOfStocks=totalAmountOfStocks+parseInt(soldItems[i].stocks);
+			totalAmountOfBarrels=totalAmountOfBarrels+parseInt(soldItems[i].barrels);
+		} 
+		$scope.locksLeft=$scope.locksMax-totalAmountOfLocks;
+
+		$scope.stocksLeft=$scope.stocksMax-totalAmountOfStocks;
+		$scope.barrelsLeft=$scope.barrelsMax-totalAmountOfBarrels;
 	}
 });
 
@@ -161,14 +173,19 @@ app.controller("reportController", function($scope, $http)
 		});
 	}
 
-	$scope.calculateCommission=function(locks,stocks,barrels){
-		var totalSoldSum= (locks*$scope.locksPrice)+(stocks*$scope.stocksPrice)+(barrels*$scope.barrelsPrice);
+	$scope.calculateTotalSoldValue=function(locks,stocks,barrels)
+	{
+		return ((locks*$scope.locksPrice)+(stocks*$scope.stocksPrice)+(barrels*$scope.barrelsPrice));
+	}
+	$scope.calculateCommission=function(locks,stocks,barrels)
+	{	
+		var totalSoldSum=$scope.calculateTotalSoldValue(locks,stocks,barrels);
 		if(totalSoldSum<=1000){
-			return "$"+($scope.commissionlevel1*totalSoldSum);
+			return ($scope.commissionlevel1*totalSoldSum);
 		}else if(totalSoldSum<=1800){
-			return "$"+($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(totalSoldSum-1000));
+			return ($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(totalSoldSum-1000));
 		}else{
-			return "$"+($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(800)+$scope.commissionlevel3*(totalSoldSum-1800));
+			return ($scope.commissionlevel1*(1000)+$scope.commissionlevel2*(800)+$scope.commissionlevel3*(totalSoldSum-1800));
 		}
 	}
 });

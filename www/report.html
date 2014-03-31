@@ -3,20 +3,22 @@
 		<text id="tableLogo">Completed orders</text>
 		<table id="tableOfStock">
 			<tr>
-				<th id="locksInStock">Year</th>
-				<th id="stocksInStock">Month</th>
-				<th id="barrelsInStock">Locks</th>
-				<th id="barrelsInStock">Stocks</th>
-				<th id="barrelsInStock">Barrels</th>
-				<th id="barrelsInStock">Commission</th>
+				<th id="reportYear">Year</th>
+				<th id="reportMonth">Month</th>
+				<th id="locksSold">Locks</th>
+				<th id="stocksSold">Stocks</th>
+				<th id="barrelsSold">Barrels</th>
+				<th id="totalValue">Total sold value</th>
+				<th id="commission">Commission</th>
 			</tr>
 			<tr ng-repeat="dataRow in endedMonthsData">
 				<td>{{dataRow.year}}</td>
-			  	<td>{{dataRow.month}}</td> 
-			  	<td>{{dataRow.locks}}</td>
-			  	<td>{{dataRow.stocks}}</td> 
-			  	<td>{{dataRow.barrels}}</td>
-			  	<td>{{calculateCommission(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
+			  	<td class="numberValue">{{dataRow.month}}</td> 
+			  	<td class="numberValue">{{dataRow.locks}}</td>
+			  	<td class="numberValue">{{dataRow.stocks}}</td> 
+			  	<td class="numberValue">{{dataRow.barrels}}</td>
+			  	<td class="numberValue">${{calculateTotalSoldValue(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
+			  	<td class="numberValue">${{calculateCommission(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
 			</tr>
 		</table>
 		<div id="actionButtons">

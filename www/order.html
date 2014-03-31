@@ -3,46 +3,47 @@
 		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
 	</div>
 	<div id="currentMonth" ng-hide="openMonthSelected == null">
-	<div id="stockTable">
-		<text id="tableLogo">Currently in stock</text>
-		<table id="tableOfStock">
-			<tr>
-				<th id="locksInStock">Locks</th>
-				<th id="stocksInStock">Stocks</th>
-				<th id="barrelsInStock">Barrels</th>
-			</tr>
-			<tr>
-			  <td>{{locksLeft}}</td>
-			  <td>{{stocksLeft}}</td>
-			  <td>{{barrelsLeft}}</td>
-			</tr>
-		</table>
-	</div>
-	
-	<div id="newOrdersTable">
-		<text id="tableLogo">Ordered Items</text>
-		<table id="orderTable">
-			<tr>
-				<th>Date</th>
-				<th>Town</th>
-				<th id="locksColumn">Locks</th>
-				<th id="stocksColumn">Stocks</th>
-				<th id="barrelsColumn">Barrels</th>
-			</tr>
-			<tr ng-repeat="dataRow in currentMonthOrder">
-			  <td>{{dataRow.date}}</td>
-			  <td>{{dataRow.town}}</td>
-			  <td>{{dataRow.locks}}</td>
-			  <td>{{dataRow.stocks}}</td> 
-			  <td>{{dataRow.barrels}}</td>
-			</tr>
-		</table>
-	</div>
+		<div id="stockTable">
+			<text id="tableLogo">Currently in stock</text>
+			<table id="tableOfStock">
+				<tr>
+					<th id="locksInStock">Locks</th>
+					<th id="stocksInStock">Stocks</th>
+					<th id="barrelsInStock">Barrels</th>
+				</tr>
+				<tr>
+				  <td class="numberValue">{{locksLeft}}</td>
+				  <td class="numberValue">{{stocksLeft}}</td>
+				  <td class="numberValue">{{barrelsLeft}}</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="newOrdersTable">
+			<div id="tableLogo">Ordered Items</div>
+			<table id="orderTable">
+				<tr>
+					<th>Date</th>
+					<th>Town</th>
+					<th id="locksColumn">Locks</th>
+					<th id="stocksColumn">Stocks</th>
+					<th id="barrelsColumn">Barrels</th>
+				</tr>
+				<tr ng-repeat="dataRow in currentMonthOrder">
+				  <td>{{dataRow.date}}</td>
+				  <td>{{dataRow.town}}</td>
+				  <td class="numberValue">{{dataRow.locks}}</td>
+				  <td class="numberValue">{{dataRow.stocks}}</td> 
+				  <td class="numberValue">{{dataRow.barrels}}</td>
+				</tr>
+			</table>
+		</div>
+		<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
 	</div>
 </div>
 
 <div id="order">
-		<text id="tableLogo">Create new order</text>
+		<div id="tableLogo">Create new order</div>
 		<form name="orderForm1" novalidate id="locationInformation">
 			<input type="text" ng-model="form.date" placeholder="Date" required />
 			<input type="text" ng-model="form.town" placeholder="Town" required />
@@ -53,10 +54,9 @@
 
 		<div id="error" ng-show="errorObject.errorHasOccured">	{{errorObject.message}}
 		</div>
-		<div id="tableDiv" >
+		<div class="actionButtonsDiv" >
 			<div id="actionButtons">
 				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(form)">Place Order</button>
-				<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
 				<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
 			</div>
 		</div>
