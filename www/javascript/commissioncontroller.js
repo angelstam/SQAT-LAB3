@@ -32,26 +32,28 @@ app.controller("orderController", function($scope, $http)
 	$scope.setCurrentOpenOrderMonth=function(rowId){
 		$scope.openMonthSelected = rowId;
 
-		$scope.getOrders($scope.getOpenMonthSelected());
+		$scope.getOrders();
 	}
 
 	$scope.sendOrder=function(formData){
 		$http({method: 'POST', url: 'json/order', data: formData}).
 		success(function (data, status, headers, config) {
-			$scope.currentMonthOrder=data;
-			alert("The order was added:");
-			$http({method: 'GET', url: 'json.php?target=getStockValue'}).
+			$scope.getOrders();
+			/*$http({method: 'GET', url: 'json.php?target=getStockValue'}).
 			success(function (data, status, headers, config) {
 				alert("JA");
 				$scope.leftInStock=data;
 			}).
 			error(function (data, status, headers, config) {
 				alert("Nej");
-			});
+			});*/
 		}).
 		error(function (data, status, headers, config) {
 		    alert("The order failed");
 		});
+	}
+
+	$scope.sendEndMonth=function(month){
 	}
 
 	$scope.endMonth=function(town,month,locks,stocks,barrels){
@@ -94,8 +96,8 @@ app.controller("orderController", function($scope, $http)
 	}
 	$scope.getMonths();
 
-	$scope.getOrders=function(month){
-		$http({method: 'GET', url: 'json/order/'+month}).
+	$scope.getOrders=function(){
+		$http({method: 'GET', url: 'json/order/'+$scope.getOpenMonthSelected()}).
 		success(function (data, status, headers, config) {
 		   $scope.currentMonthOrder=data;
 		    
@@ -172,6 +174,7 @@ app.controller("reportController", function($scope, $http)
 		    // ...
 		});
 	}
+	$scope.getEndedMonths();
 
 	$scope.calculateTotalSoldValue=function(locks,stocks,barrels)
 	{

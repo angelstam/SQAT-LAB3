@@ -32,9 +32,10 @@ button{
 	width:40%;
 }
 
-#currentMonth, #order
+#currentMonth, #order, #noCurrentMonth
 {
 	border: 5px solid #2BA6CB;
+	margin-bottom: 5px;
 }
 
 .openMonthTabs
