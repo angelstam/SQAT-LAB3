@@ -6,8 +6,8 @@ app.config(function($routeProvider) {
 
 	// route for the order page
 		.when('/', {
-			templateUrl : 'order.html',
-			controller  : 'orderController'
+			templateUrl : 'login.html',
+			controller  : 'loginController'
 		})
 
 		// route for the order page
@@ -16,11 +16,17 @@ app.config(function($routeProvider) {
 			controller  : 'orderController'
 		})
 
+		// route for the order page
+		.when('/login', {
+			templateUrl : 'login.html',
+			controller  : 'loginController'
+		})
+
 		// route for the report page
 		.when('/report', {
 			templateUrl : 'report.html',
 			controller  : 'reportController'
-		})
+		});
 });
 
 app.filter("pad", function()

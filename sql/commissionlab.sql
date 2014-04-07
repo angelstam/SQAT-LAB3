@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `commissionlab` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `commissionlab`;
--- MySQL dump 10.13  Distrib 5.6.13, for osx10.6 (i386)
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
--- Host: localhost    Database: commissionlab
+-- Host: 127.0.0.1    Database: commissionlab
 -- ------------------------------------------------------
--- Server version	5.6.17-log
+-- Server version	5.6.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -79,7 +79,7 @@ CREATE TABLE `completed_months` (
 
 LOCK TABLES `completed_months` WRITE;
 /*!40000 ALTER TABLE `completed_months` DISABLE KEYS */;
-INSERT INTO `completed_months` VALUES (2014,2,NULL),(2014,5,NULL);
+INSERT INTO `completed_months` (`year`, `month`, `completed_on_date`) VALUES (2014,1,NULL),(2014,2,NULL),(2014,3,NULL),(2014,5,NULL);
 /*!40000 ALTER TABLE `completed_months` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,7 +105,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (1,'locks',45,70),(2,'stocks',30,80),(3,'barrels',25,90);
+INSERT INTO `items` (`itemID`, `itemName`, `itemPrice`, `maximumAvailablePerMonth`) VALUES (1,'locks',45,70),(2,'stocks',30,80),(3,'barrels',25,90);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,6 +118,7 @@ DROP TABLE IF EXISTS `month_totals`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `month_totals` (
+  `seller` tinyint NOT NULL,
   `year` tinyint NOT NULL,
   `month` tinyint NOT NULL,
   `yearmonth` tinyint NOT NULL,
@@ -136,6 +137,7 @@ DROP TABLE IF EXISTS `open_month_totals`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `open_month_totals` (
+  `seller` tinyint NOT NULL,
   `month` tinyint NOT NULL,
   `locks` tinyint NOT NULL,
   `stocks` tinyint NOT NULL,
@@ -151,12 +153,13 @@ DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orders` (
-  `date` date NOT NULL,
+  `seller` varchar(45) NOT NULL,
+  `date` date DEFAULT NULL,
   `town` varchar(45) DEFAULT NULL,
   `locks` int(11) DEFAULT NULL,
   `stocks` int(11) DEFAULT NULL,
   `barrels` int(11) DEFAULT NULL,
-  PRIMARY KEY (`date`)
+  PRIMARY KEY (`seller`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -166,7 +169,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES ('2014-01-23','LinkÃ¶ping',2,4,5),('2014-02-17','Stockholm',34,4,4),('2014-02-18','Jo',23,32,32),('2014-02-19','Yxe',23,32,32),('2014-02-27','Harbin',5,3,54),('2014-03-04','Kairo',3,3,4),('2014-03-10','Irkutsk',4,5,3),('2014-03-26','Dallas',48,48,38),('2014-05-30','Lindesberg',12,3,4);
+INSERT INTO `orders` (`seller`, `date`, `town`, `locks`, `stocks`, `barrels`) VALUES ('fredrik','2014-04-08','Harbin',1,2,3),('undefined','2014-04-07','Harbin',1,2,3);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,33 +197,29 @@ LOCK TABLES `prices` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `salespersons`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `salespersons`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `salespersons` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(45) DEFAULT NULL,
-  `BankAccountValue` decimal(2,0) DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  UNIQUE KEY `Id_UNIQUE` (`Id`)
+CREATE TABLE `users` (
+  `userName` varchar(45) NOT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `userType` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`userName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `salespersons`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `salespersons` WRITE;
-/*!40000 ALTER TABLE `salespersons` DISABLE KEYS */;
-/*!40000 ALTER TABLE `salespersons` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`userName`, `password`, `userType`) VALUES ('fredrik','123','seller'),('johan','123','admin');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'commissionlab'
---
 
 --
 -- Final view structure for view `completed_month_totals`
@@ -255,7 +254,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `month_totals` AS select year(`orders`.`date`) AS `year`,month(`orders`.`date`) AS `month`,date_format(`orders`.`date`,'%Y-%m') AS `yearmonth`,sum(`orders`.`locks`) AS `locks`,sum(`orders`.`stocks`) AS `stocks`,sum(`orders`.`barrels`) AS `barrels` from `orders` group by `year`,`month` */;
+/*!50001 VIEW `month_totals` AS select `orders`.`seller` AS `seller`,year(`orders`.`date`) AS `year`,month(`orders`.`date`) AS `month`,date_format(`orders`.`date`,'%Y-%m') AS `yearmonth`,sum(`orders`.`locks`) AS `locks`,sum(`orders`.`stocks`) AS `stocks`,sum(`orders`.`barrels`) AS `barrels` from `orders` group by `year`,`month` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -274,7 +273,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `open_month_totals` AS select `mt`.`yearmonth` AS `month`,`mt`.`locks` AS `locks`,`mt`.`stocks` AS `stocks`,`mt`.`barrels` AS `barrels` from `month_totals` `mt` where (not(exists(select `cm`.`year`,`cm`.`month` from `completed_months` `cm` where ((`mt`.`year` = `cm`.`year`) and (`mt`.`month` = `cm`.`month`))))) */;
+/*!50001 VIEW `open_month_totals` AS select `mt`.`seller` AS `seller`,`mt`.`yearmonth` AS `month`,`mt`.`locks` AS `locks`,`mt`.`stocks` AS `stocks`,`mt`.`barrels` AS `barrels` from `month_totals` `mt` where (not(exists(select `cm`.`year`,`cm`.`month` from `completed_months` `cm` where ((`mt`.`year` = `cm`.`year`) and (`mt`.`month` = `cm`.`month`))))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -288,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-29 21:20:00
+-- Dump completed on 2014-04-08  0:48:49

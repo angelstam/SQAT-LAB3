@@ -8,7 +8,9 @@ $db_name = 'commissionlab';
 require("../include/RestService-class.inc");
 require("../include/RestRouteOrder-class.inc");
 require("../include/RestRouteCommission-class.inc");
-
+require("../include/RestRouteEndMonth-class.inc");
+require("../include/RestRouteItems-class.inc");
+require("../include/RestRouteLogin-class.inc");
 try
 {
 	// Create a new PDO to connect to the database.
@@ -23,6 +25,9 @@ catch(PDOException $e)
 $rest = new RestService();
 $rest->addRoute("order", new RestRouteOrder());
 $rest->addRoute("commission", new RestRouteCommission());
+$rest->addRoute("endMonth", new RestRouteEndMonth());
+$rest->addRoute("items", new RestRouteItems());
+$rest->addRoute("login", new RestRouteLogin());
 echo json_encode($rest->output());
 exit;
 

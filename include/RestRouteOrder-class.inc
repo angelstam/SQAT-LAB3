@@ -7,43 +7,40 @@ require_once("RestRoute-class.inc");
 */
 class RestRouteOrder extends RestRoute
 {
-	function get($p)
-	{
-		if (count($p) == 0)
-		{
-			return $this->getOrderMonths();
-		}
-		elseif (preg_match('/^\d{4}-\d{2}$/', $p[0]) !== 0)
-		{
-			return $this->getOrders($p[0]);
-		}
-		return false;
-	}
-
 	function put($p, $data)
 	{
-		if (count($p) == 0)
+		if ($p[0]=="putNewOrder")
 		{
 			return $this->putNewOrder($data);
 		}
+		else if($p[0]=="getOpenMonths"){
+			return $this->getOpenMonths($data);
+		}
+		else if ($p[0]=="getOrders")
+		{
+			return $this->getOrders($data);
+		}
 		return false;
 	}
 
-	private function getOrderMonths()
+	private function getOpenMonths($data)
 	{
 		global $db;
 
-		$result = $db->query("
+		$result = $db->prepare("
 			SELECT
 				month
 			FROM
 				open_month_totals
+			WHERE
+				seller=:user
 			");
-
+		$result->bindParam(':user', $data->user, PDO::PARAM_STR);
+		$result->execute();
 		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	private function getOrders($month)
+	private function getOrders($data)
 	{
 		global $db;
 
@@ -54,20 +51,24 @@ class RestRouteOrder extends RestRoute
 				orders
 			WHERE
 				DATE_FORMAT(date, '%Y-%m') = :month
+			AND
+				seller=:user
 			");
 		
-		$result->bindParam(':month', $month, PDO::PARAM_STR);
+		$result->bindParam(':month', $data->month, PDO::PARAM_STR);
+		$result->bindParam(':user', $data->user, PDO::PARAM_STR);
 		$result->execute();
 
 		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
-
+	
 	private function putNewOrder($data)
 	{
 		global $db;
 
 		//Add a new in the database
-		$result = $db->prepare("INSERT INTO orders Values (:date,:town,:orderedLocks,:orderedStocks,:orderedBarrels)");
+		$result = $db->prepare("INSERT INTO orders Values (:seller,:date,:town,:orderedLocks,:orderedStocks,:orderedBarrels)");
+		$result->bindParam(':seller', $data->user, PDO::PARAM_STR);
 		$result->bindParam(':date', $data->date, PDO::PARAM_INT);
 		$result->bindParam(':town', $data->town, PDO::PARAM_STR);
 		$result->bindParam(':orderedLocks', $data->locks, PDO::PARAM_INT);
