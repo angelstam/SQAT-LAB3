@@ -1,4 +1,22 @@
-<div id="options">
+<nav class="top-bar" data-topbar>
+		<section class="top-bar-section">
+			<ul class="right">
+				<li class="userName">
+				<a>Welcome {{retrieveAndCheckCookie()}}!</a>
+				</li>
+				<li class="logOutButton">
+				<a ng-click="redirect('logout')">Log out</a>
+				</li>
+			</ul>
+
+		<ul class="left">
+			<li class="name">
+				<h1><a href="#order">Order</a></h1>
+			</li>
+		</ul>
+		</section>
+	</nav>
+<div class="small-4 small-centered columns">
 	<div id="completedOrdesTable">
 		<text id="tableLogo">Completed orders</text>
 		<table id="tableOfStock">

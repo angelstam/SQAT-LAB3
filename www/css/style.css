@@ -7,84 +7,22 @@ html,body
 	font-family: Arial;
 }
 
-header
-{
-	width:31%;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-header #modeButtons
-{
-	margin-left: auto;
-	margin-right: auto;
-}
-
 button{
 	border: solid 1px;
 	border-radius: 5px;
 }
 
-#main
-{
-	margin-left: auto;
-	margin-right: auto;
-	width:40%;
+#orderFormDiv input{
+	width:120px;
+	float:left;
+	margin-left: 5px;
+	position: relative;
 }
 
 #currentMonth, #order, #noCurrentMonth
 {
 	border: 5px solid #2BA6CB;
 	margin-bottom: 5px;
-}
-
-.openMonthTabs
-{
-	margin: 0;
-}
-
-#locationInformation input, select
-{
-	display: inline;
-	width:32%;
-}
-
-#locationInformation select
-{
-	margin-right: 4px;
-}
-
-#orderInput input
-{
-	width:32%;
-	display: inline;
-}
-
-.actionButtonsDiv
-{
-	width:50%;
-	margin-right: auto;
-	margin-left: auto;
-}
-
-#tableWrapper{
-	width:53%;
-	margin-right: auto;
-	margin-left: auto;
-}
-
-.numberValue{
-	text-align: right;
-}
-
-table
-{
-	width: 100%;
-}
-
-th
-{
-	text-align: left;
 }
 
 input.ng-pristine,select.ng-pristine
@@ -100,12 +38,6 @@ input.ng-dirty.ng-valid,select.ng-dirty.ng-valid
 input.ng-dirty.ng-invalid,select.ng-dirty.ng-invalid
 {
 	border-color: Red;
-}
-
-#openMonthTabs button
-{
-	display: inline-block;
-	width: auto;
 }
 
 

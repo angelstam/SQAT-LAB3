@@ -1,10 +1,30 @@
-<div id="options">
+<nav class="top-bar" data-topbar>
+		<section class="top-bar-section">
+			<ul class="right">
+				<li class="userName">
+				<a>Welcome {{retrieveAndCheckCookie()}}!</a>
+				</li>
+				<li class="logOutButton">
+				<a ng-click="redirect('logout')">Log out</a>
+				</li>
+			</ul>
+
+		<ul class="left">
+			<li class="name">
+				<h1><a href="#report">Report</a></h1>
+			</li>
+		</ul>
+		</section>
+	</nav>
+<div class="small-4 small-centered columns">
 	<div>
 		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
 	</div>
 	<div id="currentMonth" ng-hide="openMonthSelected == null">
 		<div id="stockTable">
-			<text id="tableLogo">Currently in stock</text>
+			<div id="tableLogo">
+				<h3>Currently in stock</h3>
+			</div>
 			<table id="tableOfStock">
 				<tr>
 					<th id="locksInStock">Locks</th>
@@ -20,7 +40,9 @@
 		</div>
 		
 		<div id="newOrdersTable">
-			<div id="tableLogo">Ordered Items</div>
+			<div id="tableLogo">
+				<h3>Ordered Items</h3>
+			</div>
 			<table id="orderTable">
 				<tr>
 					<th>Date</th>
@@ -38,28 +60,35 @@
 				</tr>
 			</table>
 		</div>
-		<button id="placeOrderButton" ng-model="placeOrder" ng-click="getTotalSoldValue(2014,03)">End monthly sales</button>
+		<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth()">End monthly sales</button>
 	</div>
 	<div id="noCurrentMonth" ng-show="openMonthSelected == null"> Select month to show orders. </div>
 </div>
 
-<div id="order">
-		<div id="tableLogo">Create new order</div>
-		<form name="orderForm1" novalidate id="locationInformation">
-			<input type="text" ng-model="form.date" placeholder="Date" required />
-			<input type="text" ng-model="form.town" placeholder="Town" required />
-			<input type="number" ng-model="form.locks" placeholder="Number of Locks" maxlength="2" ng-pattern="numberFormat"required />
-			<input type="number" ng-model="form.stocks" placeholder="Number of Stocks" maxlength="2" ng-pattern="numberFormat"required />
-			<input type="number" ng-model="form.barrels" placeholder="Number of Barrels" maxlength="2" ng-pattern="numberFormat"required />
-		</form>
+<div id="order" class="small-8 small-centered columns">
+		<div id="tableLogo">
+			<h3>Create new order</h3>
+			<div class="statusBar" ng-show="orderIsAdded == true" >
+				<p>The order was added!</p>
+			</div>
+		</div>
+		<div id="orderFormDiv">
+			<form class="small-8 columns" name="orderForm1" novalidate id="locationInformation">
+				<input  type="text" ng-model="form.date" 
+				ng-init="form.date=(v.Dt| date:'yyyy-MM-dd')"
+				required />
+				<input type="text" ng-model="form.town" placeholder="Town" required />
+				<input type="number" ng-model="form.locks" placeholder="Locks" maxlength="2" ng-pattern="numberFormat"required />
+				<input type="number" ng-model="form.stocks" placeholder="Stocks" maxlength="2" ng-pattern="numberFormat"required />
+				<input type="number" ng-model="form.barrels" placeholder="Barrels" maxlength="2" ng-pattern="numberFormat"required />
+			</form>
+		</div>
 
 		<div id="error" ng-show="errorObject.errorHasOccured">	{{errorObject.message}}
 		</div>
 		<div class="actionButtonsDiv" >
-			<div id="actionButtons">
-				<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(form)">Place Order</button>
-				<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
-			</div>
+			<button id="placeOrderButton" ng-model="placeOrder" ng-click="sendOrder(form)">Place Order</button>
+			<button id="updateTables" ng-model="placeOrder" ng-click="getOrders(yearInput+'-'+selectMonth)">Update</button>
 		</div>
 	</div>
 </div>
