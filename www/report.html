@@ -2,7 +2,7 @@
 		<section class="top-bar-section">
 			<ul class="right">
 				<li class="userName">
-				<a>Welcome {{retrieveAndCheckCookie()}}!</a>
+				<a>Welcome {{getCookie('user')}}!</a>
 				</li>
 				<li class="logOutButton">
 				<a ng-click="redirect('logout')">Log out</a>
@@ -16,11 +16,12 @@
 		</ul>
 		</section>
 	</nav>
-<div class="small-4 small-centered columns">
+<div class="small-5 small-centered columns">
 	<div id="completedOrdesTable">
-		<text id="tableLogo">Completed orders</text>
+		<h3>Completed orders</h3>
 		<table id="tableOfStock">
 			<tr>
+				<th id="seller">Seller</th>
 				<th id="reportYear">Year</th>
 				<th id="reportMonth">Month</th>
 				<th id="locksSold">Locks</th>
@@ -30,17 +31,80 @@
 				<th id="commission">Commission</th>
 			</tr>
 			<tr ng-repeat="dataRow in endedMonthsData">
+				<td>{{dataRow.seller}}</td>
 				<td>{{dataRow.year}}</td>
-			  	<td class="numberValue">{{dataRow.month}}</td> 
-			  	<td class="numberValue">{{dataRow.locks}}</td>
-			  	<td class="numberValue">{{dataRow.stocks}}</td> 
-			  	<td class="numberValue">{{dataRow.barrels}}</td>
-			  	<td class="numberValue">${{calculateTotalSoldValue(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
-			  	<td class="numberValue">${{calculateCommission(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
+			  	<td class="rightAlign">{{dataRow.month}}</td> 
+			  	<td class="rightAlign">{{dataRow.locks}}</td>
+			  	<td class="rightAlign">{{dataRow.stocks}}</td> 
+			  	<td class="rightAlign">{{dataRow.barrels}}</td>
+			  	<td class="rightAlign">${{calculateTotalSoldValue(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
+			  	<td class="rightAlign">${{calculateCommission(dataRow.locks,dataRow.stocks,dataRow.barrels)}}</td>
 			</tr>
 		</table>
 		<div id="actionButtons">
 			<button id="updateTables" ng-model="getReport" ng-click="getEndedMonths()">Update</button>
+			<button id="updateTables" ng-model="getReport" ng-click="showCreateSalesPerson()">Add new salesperson</button>
 		</div>
 	</div>
+</div>
+<div  
+	id="createUserContainer" 
+	ng-show="showAddPersonDiv==true"
+	data-ng-init="loadUserNames()"
+	class="small-2 small-centered columns">
+
+	<form name="createUserForm" 
+		novalidate 
+		ng-model="createUserForm"
+		ng-submit="addUser(createUserForm,userAlternatives)">
+
+		<div class"row">
+			<div>
+				
+				<input type="text" 
+				ng-model="createUserForm.user"
+				name="createUserForm.user"
+				placeholder="User Name" 
+				required/>
+					
+				<p class="errorMessage" 
+				ng-show="checkNewUsernameValidity(createUserForm) == false">
+				Sorry, the username [{{createUserForm.user}}] is already taken</p>
+				
+				<input type="password"
+				id="createUserForm.password"
+				ng-model="createUserForm.password"
+				name="createUserForm.password" 
+				placeholder="Password" 
+				required />
+				
+				<input type="password" 
+				ng-model="createUserForm.passwordConfirm"
+				name="createUserForm.passwordConfirm" 
+				placeholder="Confirm password" 
+				required />
+				
+				<p class="errorMessage" 
+				ng-show="confirmPasswords(createUserForm) == false">
+				You didn't enter the same password in the two password fields</p>
+				
+				<select
+				ng-model="userAlternatives"
+				ng-options="u.name for u in userTypes"
+				required></select>
+
+				<button id="addUserButton"
+				type="submit"
+				ng-disabled="!(noEmptyFields(createUserForm) &&
+				checkNewUsernameValidity(createUserForm) &&
+				confirmPasswords(createUserForm))">
+				Add User</button>
+			
+			</div>
+		</div>		
+	</form>
+</div>
+
+<div id="sucessMessage" class="small-2 small-centered columns" ng-an ng-show="showSuccessMessage==true">
+The user was added
 </div>

@@ -67,7 +67,11 @@ class RestRouteOrder extends RestRoute
 		global $db;
 
 		//Add a new in the database
-		$result = $db->prepare("INSERT INTO orders Values (:seller,:date,:town,:orderedLocks,:orderedStocks,:orderedBarrels)");
+		$result = $db->prepare("
+			INSERT INTO 
+				orders (seller,date,town,locks,stocks,barrels)
+			VALUES 
+				(:seller,:date,:town,:orderedLocks,:orderedStocks,:orderedBarrels)");
 		$result->bindParam(':seller', $data->user, PDO::PARAM_STR);
 		$result->bindParam(':date', $data->date, PDO::PARAM_INT);
 		$result->bindParam(':town', $data->town, PDO::PARAM_STR);

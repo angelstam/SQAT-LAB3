@@ -19,7 +19,19 @@ button{
 	position: relative;
 }
 
-#currentMonth, #order, #noCurrentMonth
+.rightAlign{
+	text-align: right;
+}
+
+.leftAlign{
+	text-align: left;
+}
+
+#endMonthButton button{
+	margin-left: 52%;
+}
+
+#userStatistics, #order
 {
 	border: 5px solid #2BA6CB;
 	margin-bottom: 5px;

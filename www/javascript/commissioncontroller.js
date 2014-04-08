@@ -29,15 +29,6 @@ app.controller("orderController", function($scope, $http, $location)
 	$scope.openMonthSelected;
 
 	$scope.isReportMode = false;
-	/*
-	This method will retrieve cookies stored by the application 
-	and check if the session information is still valid.
-	*/
-	$scope.retrieveUserCookie=function()
-	{
-		var user=$scope.getCookie('user');
-		return user;
-	}
 
 	/*
 	Returns the value of the cookie given. If no cookie
@@ -60,13 +51,13 @@ app.controller("orderController", function($scope, $http, $location)
 	// Checks if the given cookie is set return true if cookie is set 
 	// and false if not. 
 	$scope.isCookieSet = function(cookieIdentifier){
-		var identifier = $scope.getCookie(cookieIdentifier);
+	var identifier = $scope.getCookie(cookieIdentifier);
 		if (identifier!="" && identifier!=null)
-		  {
+		{
 			return true;
-		  } else {
+		} else {
 			return false;
-		  }
+		}
 	}
 
 	$scope.getOpenMonthSelected=function(){
@@ -106,19 +97,18 @@ app.controller("orderController", function($scope, $http, $location)
 
 	$scope.sendOrder=function(formData)
 	{	
-		formData.user=$scope.retrieveUserCookie();
+		formData.user=$scope.getCookie('user');
 
 		//if($scope.checkEnteredOrder()==true){
 			$http({method: 'POST', url: 'json/order/putNewOrder', data: formData}).
 			success(function (data, status, headers, config) {
-				alert(data);
+				$scope.recievedData=data;
 				formData.town=null;
 				formData.locks=null;
 				formData.stocks=null;
 				formData.barrels=null;
 				$scope.orderIsAdded=true;
-				$scope.getOrders();
-				$scope.getMonths();
+				$scope.setCurrentOpenOrderMonth($scope.openMonthSelected);	
 			}).
 			error(function (data, status, headers, config) {
 			    alert("The order failed");
@@ -168,15 +158,16 @@ app.controller("orderController", function($scope, $http, $location)
 	}
 
 	$scope.endMonth=function(){
-		$scope.temp={yearMonth:$scope.getOpenMonthSelected()};
+		$scope.temp={yearMonth:$scope.getOpenMonthSelected(),sellerId: $scope.getCookie('user')};
 		$http({method: 'POST', url: 'json/endMonth', data: $scope.temp}).
 		success(function (data, status, headers, config) {
+			$scope.recievedData=data;
 			$scope.setCurrentOpenOrderMonth(null);
+			$scope.getOpenMonths();
 		}).
 		error(function (data, status, headers, config) {
 		    alert("The order failed");
 		});
-		$scope.getMonths();
 	}
 
 	$scope.getTotalSoldValue=function(year,month){
@@ -192,8 +183,8 @@ app.controller("orderController", function($scope, $http, $location)
 	/*
 		This method will return all open months for the specified user
 	*/
-	$scope.getMonths=function(){
-		$http({method: 'POST', url: 'json/order/getOpenMonths', data: {'user': $scope.retrieveUserCookie()}}).
+	$scope.getOpenMonths=function(){
+		$http({method: 'POST', url: 'json/order/getOpenMonths', data: {'user': $scope.getCookie('user')}}).
 		success(function (data, status, headers, config) {
 		    $scope.openMonths=data;
 		}).
@@ -201,24 +192,20 @@ app.controller("orderController", function($scope, $http, $location)
 		    // ...
 		});
 	}
-	$scope.getMonths();
-	if($scope.locksMax==null){
-	$scope.getItems();
-	}
+	
 	/*
 		This methos will return all order data for the specified month
 	*/
 	$scope.getOrders=function(){
-		$http({method: 'POST', url: 'json/order/getOrders', data:{'month':$scope.getOpenMonthSelected(),'user': $scope.retrieveUserCookie()}}).
+		$http({method: 'POST', url: 'json/order/getOrders', data:{'month':$scope.getOpenMonthSelected(),'user': $scope.getCookie('user')}}).
 		success(function (data, status, headers, config) {
 		   $scope.currentMonthOrder=data;
-		    
 		   $scope.calculateItemsLeftInStock($scope.currentMonthOrder);
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
 		});
-		$scope.getMonths();
+		$scope.getOpenMonths();
 	}
 
 	$scope.update=function()
@@ -268,29 +255,6 @@ app.controller("orderController", function($scope, $http, $location)
 		$scope.barrelsLeft=$scope.barrelsMax-totalAmountOfBarrels;
 	}
 
-	$scope.clearOrderCells=function()
-	{
-		//$scope.orderForm1 =
-	}
-
-	/*
-	This method will handle redirection to a given module
-	*/
-	$scope.redirect=function()
-	{
-		$location.url('/order');	
-	}
-
-	/*
-	This method will retrieve cookies stored by the application 
-	and check if the session information is still valid.
-	*/
-	$scope.retrieveAndCheckCookie=function()
-	{
-		var user=$scope.getCookie('user');
-		return user;
-	}
-
 	/*
 	Returns the value of the cookie given. If no cookie
 	present getCookie returns "".
@@ -316,8 +280,10 @@ app.controller("orderController", function($scope, $http, $location)
 	{	
 		if(redirectTo=="logout"){
 			$scope.deleteCookies();
-
 			$location.url('/login');
+		}
+		else if(redirectTo=="report"){
+			$location.url('/report');
 		}
 	}
 
@@ -329,6 +295,29 @@ app.controller("orderController", function($scope, $http, $location)
 		}
 
 	}
+
+	// Checks if the given cookie is set return true if cookie is set 
+	// and false if not. 
+	$scope.isCookieSet = function(cookieIdentifier){
+		var identifier = $scope.getCookie(cookieIdentifier);
+		if (identifier!="" && identifier!=null)
+		  {
+			return true;
+		  } else {
+			return false;
+		  }
+	}
+
+	//On load run the following
+	if($scope.isCookieSet('user')== true && ($scope.getCookie('userType')=='admin' || $scope.getCookie('userType')=='seller')){
+		$scope.getOpenMonths();
+		if($scope.locksMax==null){
+			$scope.getItems();
+		}
+	}
+	else{
+		$scope.redirect('logout');
+	}
 });
 
 app.controller("reportController", function($scope, $http, $location)
@@ -339,16 +328,26 @@ app.controller("reportController", function($scope, $http, $location)
 	$scope.locksPrice=45;
 	$scope.stocksPrice=30;
 	$scope.barrelsPrice=25;
-	$scope.getEndedMonths=function(){
+	$scope.showAddPersonDiv=false;
+	$scope.showSuccessMessage=false;
+	$scope.userTypes=[
+	{name:'Administrator',userType:'admin'},
+	{name:'Seller',userType:'seller'}
+	];
+
+	/*
+	This method retrieves the data of ended months 
+	for the specified user
+	*/
+	$scope.getEndedMonths=function(user){
 		$http({method: 'GET', url: 'json/commission'}).
 		success(function (data, status, headers, config) {
-		    $scope.endedMonthsData=data;
+			$scope.endedMonthsData=data;
 		}).
 		error(function (data, status, headers, config) {
-		    // ...
+		    alert("Failed to retrieve users from the db");
 		});
 	}
-	$scope.getEndedMonths();
 
 	$scope.calculateTotalSoldValue=function(locks,stocks,barrels)
 	{
@@ -373,14 +372,89 @@ app.controller("reportController", function($scope, $http, $location)
 		}
 	}
 
+	$scope.showCreateSalesPerson=function(){
+		if($scope.showAddPersonDiv==true){
+			$scope.showAddPersonDiv=false;
+		}
+		else{
+			$scope.showAddPersonDiv=true;
+			$scope.userAlternatives=$scope.userTypes[1];
+		}
+		$scope.showSuccessMessage=false;
+		
+	}
+
+	$scope.loadUserNames=function(){
+		$http({method: 'GET', url: 'json/login/getAllUsers'}).
+		success(function (data, status, headers, config) {
+			$scope.usersInDB=data;
+		}).
+		error(function (data, status, headers, config) {
+		    alert("Failed to retrieve users from the db");
+		});
+	}
+
 	/*
-	This method will retrieve cookies stored by the application 
-	and check if the session information is still valid.
+	This method will check if the new userName is unique in the 
+	on the server detabase
 	*/
-	$scope.retrieveAndCheckCookie=function()
+	$scope.checkNewUsernameValidity=function(userForm)
+	{	
+		var validNewUserName=true;
+		
+		angular.forEach($scope.usersInDB,function(value){
+			if(userForm.user==value.name){
+				validNewUserName=false;
+			}
+		});
+		return validNewUserName;
+	}
+
+	/*
+	Returns true if the passwords match else false.
+	*/
+	$scope.confirmPasswords=function(userForm)
 	{
-		var user=$scope.getCookie('user');
-		return user;
+		var passwordMatch = false;
+		if(userForm.password==userForm.passwordConfirm){
+			passwordMatch = true;
+		}
+		return passwordMatch;
+	}
+
+	$scope.addUser=function(userForm,userAlternatives){
+		userForm.userType=userAlternatives.userType;
+		
+		$http({method: 'POST', url: 'json/login/addNewUser', data: userForm}).
+		success(function (data, status, headers, config) {
+			$scope.showAddPersonDiv=false;
+			$scope.showSuccessMessage=true;
+		}).
+		error(function (data, status, headers, config) {
+		    alert("Failed to retrieve users from the db");
+		});	
+	}
+
+	/*
+	Checks if there are any empty fields.
+	Returns true if there are no empty fields.
+	Returns false if any one field is empty.
+	*/
+	$scope.noEmptyFields=function(userForm)
+	{	
+		var isNotNull=true;
+		
+		if(userForm.user==null){
+				isNotNull=false;
+		}
+		if(userForm.password==null){
+				isNotNull=false;
+		}
+		if(userForm.passwordConfirm==null){
+				isNotNull=false;
+		}
+
+		return isNotNull;
 	}
 
 	/*
@@ -410,6 +484,9 @@ app.controller("reportController", function($scope, $http, $location)
 			$scope.deleteCookies();
 			$location.url('/login');
 		}
+		else if(redirectTo=="order"){
+			$location.url('/order');
+		}
 	}
 
 	// Deletes all cookies
@@ -420,6 +497,30 @@ app.controller("reportController", function($scope, $http, $location)
 		}
 
 	}
+
+	// Checks if the given cookie is set return true if cookie is set 
+	// and false if not. 
+	$scope.isCookieSet = function(cookieIdentifier){
+		var identifier = $scope.getCookie(cookieIdentifier);
+		if (identifier!="" && identifier!=null)
+		  {
+			return true;
+		  } else {
+			return false;
+		  }
+	}
+
+	//On load run the following
+	if($scope.isCookieSet('user')== true && $scope.getCookie('userType')=='admin'){
+		$scope.getEndedMonths($scope.getCookie('user'));	
+	}
+	else if($scope.isCookieSet('user')==true && $scope.getCookie('userType')=='seller'){
+		$scope.redirect('order')
+	}
+	else{
+		$scope.redirect('logout');
+	}
+	
 });
 
 app.controller("loginController", function($scope, $http, $location)
@@ -433,6 +534,7 @@ app.controller("loginController", function($scope, $http, $location)
 			$scope.retrievedData=data;
 		   if(data.length==1 && data!=""){
 				$scope.setCookie('user',data[0].userName);
+				$scope.setCookie('userType',data[0].userType);
 				$scope.redirect();
 			}
 			else{
@@ -451,17 +553,6 @@ app.controller("loginController", function($scope, $http, $location)
 	$scope.redirect=function()
 	{
 		$location.url('/order');	
-	}
-
-	/*
-	This method will retrieve cookies stored by the application 
-	and check if the session information is still valid.
-	*/
-	$scope.retrieveAndCheckCookie=function()
-	{
-		alert($scope.getCookie('user'));
-		var user=$scope.getCookie('user');
-		return user;
 	}
 
 	/*
