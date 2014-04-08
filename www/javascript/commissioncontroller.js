@@ -66,8 +66,13 @@ app.controller("orderController", function($scope, $http, $location)
 
 	$scope.setCurrentOpenOrderMonth=function(rowId)
 	{
-		$scope.openMonthSelected = rowId;
-		$scope.getOrders();
+		if(rowId=="empty"){
+			$scope.openMonthSelected = null;
+		}
+		else{
+			$scope.openMonthSelected = rowId;
+			$scope.getOrders();
+		}
 	}
 
 	$scope.getItems=function()
@@ -162,8 +167,9 @@ app.controller("orderController", function($scope, $http, $location)
 		$http({method: 'POST', url: 'json/endMonth', data: $scope.temp}).
 		success(function (data, status, headers, config) {
 			$scope.recievedData=data;
-			$scope.setCurrentOpenOrderMonth(null);
 			$scope.getOpenMonths();
+			$scope.setCurrentOpenOrderMonth("empty");
+			
 		}).
 		error(function (data, status, headers, config) {
 		    alert("The order failed");
