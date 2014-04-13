@@ -13,12 +13,17 @@ class RestRouteOrder extends RestRoute
 		{
 			return $this->putNewOrder($data);
 		}
-		else if($p[0]=="getOpenMonths"){
+		else if($p[0]=="getOpenMonths")
+		{
 			return $this->getOpenMonths($data);
 		}
 		else if ($p[0]=="getOrders")
 		{
 			return $this->getOrders($data);
+		}
+		else if($p[0]=="getMonthsSales")
+		{
+			return $this->getMonthsSales($data);
 		}
 		return false;
 	}
@@ -59,6 +64,26 @@ class RestRouteOrder extends RestRoute
 		$result->bindParam(':user', $data->user, PDO::PARAM_STR);
 		$result->execute();
 
+		return $result->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	private function getMonthsSales($data)
+	{
+		global $db;
+
+		$result = $db->prepare("
+			SELECT
+				sum(locks) as locks, 
+				sum(stocks) as stocks, 
+				sum(barrels) as barrels
+			FROM
+				orders
+			WHERE
+				DATE_FORMAT(date, '%Y-%m') = :month
+			");
+		
+		$result->bindParam(':month', $data->month, PDO::PARAM_STR);
+		$result->execute();
 		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 	

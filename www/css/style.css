@@ -37,6 +37,10 @@ button{
 	margin-bottom: 5px;
 }
 
+#error{
+	color: red;
+}
+
 input.ng-pristine,select.ng-pristine
 {
 	border-color: Gold;

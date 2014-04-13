@@ -1,32 +1,25 @@
 app.controller("orderController", function($scope, $http, $location)
 {
-	$scope.locksMax= null;
-	$scope.stocksMax= null;
-	$scope.barrelsMax= null;
-	$scope.items=null;
-	$scope.locksLeft=0;
-	$scope.stocksLeft=0;
-	$scope.barrelsLeft=0;
+	$scope.stock=null;
 	$scope.soldItemValue= 0;
 	$scope.totalSoldValue=0;
 	$scope.monthIndex=0;
 	$scope.recievedData=null;
 	$scope.currentMonthOrder=null;
 	$scope.leftInStock=null;
-	$scope.monthArray=[{name:'January',id:'01'},{name:'February',id:'02'},{name:'Mars',id:'03'},{name:'April',id:'04'},{name:'May',id:'05'},{name:'June',id:'06'},{name:'July',id:'07'},{name:'August',id:'08'},{name:'Sepember',id:'09'},{name:'October',id:'10'},{name:'November',id:'11'},{name:'December',id:'12'}];
 	$scope.commissionInformation=null;
-	$scope.month="Jan";
-	$scope.year="Year";
 	$scope.numberFormat = /^([1-9]{1}|[1-9]{1}[0-9]{1})$/;
-	$scope.errorObject;
+	$scope.errorObject={};
+	$scope.errorObject.errorHasOccured=false;
 	$scope.endedMonthsData;
+	$scope.monthToProcess=null;
 	$scope.orderIsAdded=false;
 	$scope.v = {
         Dt: Date.now()
     }
 
 	$scope.openMonths; // Months currently open for new orders
-	$scope.openMonthSelected;
+	$scope.openMonthSelected=null;
 
 	$scope.isReportMode = false;
 
@@ -61,17 +54,20 @@ app.controller("orderController", function($scope, $http, $location)
 	}
 
 	$scope.getOpenMonthSelected=function(){
+		$scope.monthToProcess=$scope.openMonths[$scope.openMonthSelected].month;
 		return $scope.openMonths[$scope.openMonthSelected].month;
 	}
 
-	$scope.setCurrentOpenOrderMonth=function(rowId)
+	$scope.setCurrentOpenOrderMonth=function(rowId,callback)
 	{
+		$scope.errorObject.errorHasOccured=false;
 		if(rowId=="empty"){
 			$scope.openMonthSelected = null;
 		}
-		else{
+		else
+		{
 			$scope.openMonthSelected = rowId;
-			$scope.getOrders();
+			$scope.getOrders(callback);
 		}
 	}
 
@@ -79,19 +75,19 @@ app.controller("orderController", function($scope, $http, $location)
 	{
 		$http({method: 'GET', url: 'json/items'}).
 		success(function (data, status, headers, config) {
-			$scope.items=data;
+			$scope.stock=data;
 
-			for (var i=0;i<$scope.items.length;i++)
+			for (var i=0;i<$scope.stock.length;i++)
 			{
-				if($scope.items[i].itemName == 'locks')
+				if($scope.stock[i].itemName == 'locks')
 				{
-					$scope.locksMax= $scope.items[i].maximumAvailablePerMonth;
-				}else if($scope.items[i].itemName == 'stocks')
+					$scope.stock.locksMax=$scope.stock[i].maximumAvailablePerMonth;
+				}else if($scope.stock[i].itemName == 'stocks')
 				{
-					$scope.stocksMax= $scope.items[i].maximumAvailablePerMonth;
-				}else if($scope.items[i].itemName == 'barrels')
+					$scope.stock.stocksMax= $scope.stock[i].maximumAvailablePerMonth;
+				}else if($scope.stock[i].itemName == 'barrels')
 				{
-					$scope.barrelsMax= $scope.items[i].maximumAvailablePerMonth;
+					$scope.stock.barrelsMax= $scope.stock[i].maximumAvailablePerMonth;
 				}
 			}
 		}).
@@ -102,9 +98,8 @@ app.controller("orderController", function($scope, $http, $location)
 
 	$scope.sendOrder=function(formData)
 	{	
-		formData.user=$scope.getCookie('user');
-
-		//if($scope.checkEnteredOrder()==true){
+		if($scope.isOrderValid(formData)==true){
+			formData.user=$scope.getCookie('user');
 			$http({method: 'POST', url: 'json/order/putNewOrder', data: formData}).
 			success(function (data, status, headers, config) {
 				$scope.recievedData=data;
@@ -118,49 +113,157 @@ app.controller("orderController", function($scope, $http, $location)
 			error(function (data, status, headers, config) {
 			    alert("The order failed");
 			});
-		//}
+		}
 	}
 
-	$scope.checkEnteredOrder=function(){
-		$scope.getItems();
+	$scope.processOrder=function(orderForm){
+		$scope.monthToProcess=orderForm.date.substring(0,7);
 		/*
-		//Check that order don't exceed maximum limit
-		if(formaData.locks<=$scope.locksMax){
-			//Check that order don't exceed amount in stock
-			if(){
-
-			}else{
-				return false;
+		Check if entered month is active
+		*/
+		for(var i=0;i<$scope.openMonths.length;i++){
+			//The chosen month is currently open
+			if($scope.openMonths[i].month==$scope.monthToProcess){
+				$scope.setCurrentOpenOrderMonth(i, function(){
+					if($scope.isOrderValid(orderForm)==true){
+						$scope.sendOrder(orderForm);
+					}
+				});
+				return;
 			}
+		}
+		
+		/*
+		If month isn't allready open
+		*/
+		if($scope.isOrderValid(orderForm)==true){
+			$scope.sendOrder(orderForm);
+		}
+	}
+
+	$scope.isOrderValid=function(orderForm){
+		$scope.errorObject.errorHasOccured=false;
+		if($scope.isDateValid(orderForm)==true 
+			&& $scope.isTownValid(orderForm)==true 
+			&& $scope.isItemOrderValid(orderForm)==true){
+			return true;
 		}else{
 			return false;
 		}
+	}
 
-		//Check that order don't exceed maximum limit
-		if(formaData.stocks<=$scope.stocksMax){
-			//Check that order don't exceed amount in stock
-			if(){
+	$scope.isDateValid=function(orderForm){
+		//current date
+		var currentDate = new Date();
+		//entered date in order
+		var orderDate = new Date($scope.monthToProcess);
 
-			}else{
-				return false;
-			}
+		/*
+		The chosen month is not currently open
+		*/
+		if((currentDate.getMonth()+1)<=(orderDate.getMonth()+1) 
+			&& currentDate.getFullYear()<=orderDate.getFullYear()){
+				return true;
 		}else{
+			$scope.errorObject.message="Not allowed to start report for a past month";
+			$scope.errorObject.errorHasOccured=true;
+			return false;
+		}
+	}
+
+	$scope.isItemOrderValid=function(formData){
+
+		/*
+		Handle the case where no information has been added in the 
+		locks,stocks or barrels fields
+		*/
+		if(formData.locks==null){
+			formData.locks=0;
+		}
+		if(formData.stocks==null){
+			formData.stocks=0;
+		}
+		if(formData.barrels==null){
+			formData.barrels=0;
+		}
+
+		/*
+		Check if the order contains any locks,stocks or barrels
+		*/
+		if(formData.locks==0 && formData.stocks==0 && formData.barrels==0){
+			$scope.errorObject.message="No items added in the order";
+			$scope.errorObject.errorHasOccured=true;
 			return false;
 		}
 
-		//Check that order don't exceed maximum limit
-		if(formaData.barrels<=$scope.barrelsMax){
+		/*
+		Check that locks order don't exceed stock limit
+		*/
+		if(formData.locks<=$scope.stock.locksMax||$scope.openMonthSelected!=null){
 			//Check that order don't exceed amount in stock
-			if(){
+			if($scope.openMonthSelected!=null && formData.locks<=$scope.stock.locksLeft){
+				//Do nothing
+			}else{
+				$scope.errorObject.message="Locks order exceeds stock limit of: "+$scope.stock.locksLeft+" locks"
+				$scope.errorObject.errorHasOccured=true;
+				return false;
+			}
+		}else{
+			$scope.errorObject.message="Locks order exceeds stock limit of: "+$scope.stock.locksMax+" locks"
+			$scope.errorObject.errorHasOccured=true;
+			return false;
+		}
+
+		/*
+		Check that stocks order don't exceed stock limit
+		*/
+		if(formData.stocks<=$scope.stock.stocksMax||$scope.openMonthSelected!=null){
+			//Check that order don't exceed amount in stock
+			if($scope.openMonthSelected!=null && formData.stocks<=$scope.stock.stocksLeft){
+				//Do nothing
+			}else{
+				$scope.errorObject.message="Stocks order exceeds stock limit of: "+$scope.stock.stocksLeft+" stocks"
+				$scope.errorObject.errorHasOccured=true;
+				return false;
+			}
+		}else{
+			$scope.errorObject.message="Stocks order exceeds stock limit of: "+$scope.stock.stocksLeft+" stocks"
+			$scope.errorObject.errorHasOccured=true;
+			return false;
+		}
+
+		/*
+		Check that barrels order don't exceed stock limit
+		*/
+		if(formData.barrels<=$scope.stock.barrelsMax||$scope.openMonthSelected!=null){
+			//Check that order don't exceed amount in stock
+			if($scope.openMonthSelected!=null && formData.barrels<=$scope.stock.barrelsLeft){
 				return true;
 			}else{
+				$scope.errorObject.message="Barrels order exceeds stock limit of: "+$scope.stock.barrelsLeft+" barrels"
+				$scope.errorObject.errorHasOccured=true;
 				return false;
 			}
 		}else{
+			$scope.errorObject.message="Barrels order exceeds stock limit of: "+$scope.stock.barrelsLeft+" barrels"
+			$scope.errorObject.errorHasOccured=true;
 			return false;
 		}
-		*/
+		return true;
 	}
+
+	$scope.isTownValid=function(formData){
+		/*
+		Checks if a town has been added
+		*/
+		if(formData.town==null){
+			$scope.errorObject.message="No town added in the order";
+			$scope.errorObject.errorHasOccured=true;
+			return false;
+		}else{
+			return true;
+		}
+	}	
 
 	$scope.endMonth=function(){
 		$scope.temp={yearMonth:$scope.getOpenMonthSelected(),sellerId: $scope.getCookie('user')};
@@ -192,7 +295,7 @@ app.controller("orderController", function($scope, $http, $location)
 	$scope.getOpenMonths=function(){
 		$http({method: 'POST', url: 'json/order/getOpenMonths', data: {'user': $scope.getCookie('user')}}).
 		success(function (data, status, headers, config) {
-		    $scope.openMonths=data;
+		    	$scope.openMonths=data;
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -202,16 +305,20 @@ app.controller("orderController", function($scope, $http, $location)
 	/*
 		This methos will return all order data for the specified month
 	*/
-	$scope.getOrders=function(){
+	$scope.getOrders=function(callback){
 		$http({method: 'POST', url: 'json/order/getOrders', data:{'month':$scope.getOpenMonthSelected(),'user': $scope.getCookie('user')}}).
 		success(function (data, status, headers, config) {
 		   $scope.currentMonthOrder=data;
-		   $scope.calculateItemsLeftInStock($scope.currentMonthOrder);
+		   $scope.getOpenMonths();
+		   $scope.calculateItemsLeftInStock();
+		   if(callback!=null)
+		   {
+		   		callback();
+		   }
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
-		});
-		$scope.getOpenMonths();
+		});	
 	}
 
 	$scope.update=function()
@@ -244,21 +351,18 @@ app.controller("orderController", function($scope, $http, $location)
 		});
 	}
 
-	$scope.calculateItemsLeftInStock=function(soldItems)
+	$scope.calculateItemsLeftInStock=function()
 	{
-		var totalAmountOfLocks=0;
-		var totalAmountOfStocks=0;
-		var totalAmountOfBarrels=0;
-
-		for (var i=0;i<soldItems.length;i++)
-		{	
-			totalAmountOfLocks=totalAmountOfLocks+parseInt(soldItems[i].locks);
-			totalAmountOfStocks=totalAmountOfStocks+parseInt(soldItems[i].stocks);
-			totalAmountOfBarrels=totalAmountOfBarrels+parseInt(soldItems[i].barrels);
-		} 
-		$scope.locksLeft=$scope.locksMax-totalAmountOfLocks;
-		$scope.stocksLeft=$scope.stocksMax-totalAmountOfStocks;
-		$scope.barrelsLeft=$scope.barrelsMax-totalAmountOfBarrels;
+		$http({method: 'POST', url: 'json/order/getMonthsSales', data:{'month':$scope.monthToProcess}}).
+		success(function (data, status, headers, config) {
+		   	$scope.monthSales=data;
+		   	$scope.stock.locksLeft=$scope.stock.locksMax-$scope.monthSales[0].locks;
+			$scope.stock.stocksLeft=$scope.stock.stocksMax-$scope.monthSales[0].stocks;
+			$scope.stock.barrelsLeft=$scope.stock.barrelsMax-$scope.monthSales[0].barrels;
+		}).
+		error(function (data, status, headers, config) {
+		    // ...
+		});
 	}
 
 	/*
@@ -317,7 +421,7 @@ app.controller("orderController", function($scope, $http, $location)
 	//On load run the following
 	if($scope.isCookieSet('user')== true && ($scope.getCookie('userType')=='admin' || $scope.getCookie('userType')=='seller')){
 		$scope.getOpenMonths();
-		if($scope.locksMax==null){
+		if($scope.stock==null){
 			$scope.getItems();
 		}
 	}
@@ -359,6 +463,7 @@ app.controller("reportController", function($scope, $http, $location)
 	{
 		return ((locks*$scope.locksPrice)+(stocks*$scope.stocksPrice)+(barrels*$scope.barrelsPrice));
 	}
+
 	$scope.calculateCommission=function(locks,stocks,barrels)
 	{	
 		var totalSoldSum=$scope.calculateTotalSoldValue(locks,stocks,barrels);
@@ -459,7 +564,6 @@ app.controller("reportController", function($scope, $http, $location)
 		if(userForm.passwordConfirm==null){
 				isNotNull=false;
 		}
-
 		return isNotNull;
 	}
 
