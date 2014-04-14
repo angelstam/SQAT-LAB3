@@ -13,7 +13,8 @@ button{
 }
 
 #orderFormDiv input{
-	width:120px;
+	width:18%;
+	min-width:90px;
 	float:left;
 	margin-left: 5px;
 	position: relative;
@@ -25,10 +26,6 @@ button{
 
 .leftAlign{
 	text-align: left;
-}
-
-#endMonthButton button{
-	margin-left: 52%;
 }
 
 #userStatistics, #order

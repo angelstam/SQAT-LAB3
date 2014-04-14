@@ -16,19 +16,19 @@
 		</ul>
 		</section>
 	</nav>
-<div id="userStatistics" class="small-7 small-centered columns">
+<div id="userStatistics" class="small-12 medium-8 large-6 small-centered columns">
 	<div>
 		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button> 
 	</div>
 
 	<div ng-hide="openMonthSelected == null">
-		<div class="small-12 small columns">
+		<div>
 		<h3>{{openMonths[openMonthSelected].month}}</h3>
 		</div>
-		<div class="small-10 small-centered columns" id="currentMonth" >
-			<div class="small-5 large-5 columns" id="stockTable">
-					<h3>Currently in stock</h3>
-				<table class="small-3 small columns" id="tableOfStock">
+		<div id="currentMonth" >
+			<div class="medium-6 large-6" id="stockTable">
+				<h3>Currently in stock</h3>
+				<table id="tableOfStock">
 					<tr>
 						<th class="leftAlign" id="locksInStock">Locks</th>
 						<th class="leftAlign" id="stocksInStock">Stocks</th>
@@ -42,9 +42,9 @@
 				</table>
 			</div>
 			
-			<div class="small-6 small columns" id="newOrdersTable" >
-					<h3>Ordered Items</h3>
-				<table class="small-4 small columns" id="orderTable">
+			<div class="medium-6 large-6" id="newOrdersTable" >
+				<h3>Ordered Items</h3>
+				<table id="orderTable">
 					<tr>
 						<th class="leftAlign">Date</th>
 						<th class="leftAlign">Town</th>
@@ -60,38 +60,37 @@
 					  <td class="rightAlign">{{dataRow.barrels}}</td>
 					</tr>
 				</table>
-				
+			</div>
+			<div id="endMonthButton" class="large-11 large-centered">
+				<button id="endMonthButton" ng-model="endMonth" ng-click="endMonth()">End monthly sales</button>
 			</div>
 		</div>
-		<div id="endMonthButton">
-			<button id="endMonthButton" ng-model="endMonth" ng-click="endMonth()">End monthly sales</button>
-		</div>
+		
 	</div>
 	<div id="noCurrentMonth" ng-show="openMonthSelected == null"> <h3>Select month to show orders</h3> 
 	</div>
 </div>
-<div id="order" class="small-7 small-centered columns">
-		<div id="tableLogo">
-			<h3>Create new order</h3>
-		</div>
-		<div id="orderFormDiv">
-			<form class="small-9 columns" name="orderForm1" novalidate id="locationInformation">
-				<input  type="text" ng-model="orderForm.date" 
-				ng-init="orderForm.date=(v.Dt| date:'yyyy-MM-dd')"
-				required />
-				<input type="text" ng-model="orderForm.town" placeholder="Town" required />
-				<input type="number" ng-model="orderForm.locks" placeholder="Locks" maxlength="2" ng-pattern="numberFormat"required />
-				<input type="number" ng-model="orderForm.stocks" placeholder="Stocks" maxlength="2" ng-pattern="numberFormat"required />
-				<input type="number" ng-model="orderForm.barrels" placeholder="Barrels" maxlength="2" ng-pattern="numberFormat"required />
-			</form>
-		</div>
-		<div class="actionButtonsDiv" >
-			<button id="placeOrderButton" ng-model="placeOrder" ng-click="processOrder(orderForm)">Place Order</button>
-		</div>
-		<div class="alert-box warning radius small-7 small-centered columns" ng-show="errorObject.errorHasOccured"><em id="errorMessage">##ERROR## {{errorObject.message}}</em>
-		</div>
-		<div class="alert-box success radius small-7 small-centered columns" ng-show="successObject.showSuccessMessage" >
-			<em id="successMessage">{{successObject.message}}</em>
-		</div>
+<div id="order" class="small-12 medium-8 large-6 small-centered columns">
+	<div id="tableLogo">
+		<h3>Create new order</h3>
+	</div>
+	<div class="columns large-11 medium-12 small-11 small-centered" id="orderFormDiv">
+		<form name="orderForm1" novalidate id="locationInformation">
+			<input type="text" ng-model="orderForm.date" 
+			ng-init="orderForm.date=(v.Dt| date:'yyyy-MM-dd')"
+			required />
+			<input type="text" ng-model="orderForm.town" placeholder="Town" required />
+			<input type="number" ng-model="orderForm.locks" placeholder="Locks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" ng-model="orderForm.stocks" placeholder="Stocks" maxlength="2" ng-pattern="numberFormat"required />
+			<input type="number" ng-model="orderForm.barrels" placeholder="Barrels" maxlength="2" ng-pattern="numberFormat"required />
+		</form>
+	</div>
+	<div class="actionButtonsDiv columns small-8 medium-6 large-5 small-centered">
+		<button id="placeOrderButton" ng-model="placeOrder" ng-click="processOrder(orderForm)">Place Order</button>
+	</div>
+	<div class="alert-box warning radius small-7 small-centered columns" ng-show="errorObject.errorHasOccured"><em id="errorMessage">##ERROR## {{errorObject.message}}</em>
+	</div>
+	<div class="alert-box success radius small-7 small-centered columns" ng-show="successObject.showSuccessMessage" >
+		<em id="successMessage">{{successObject.message}}</em>
 	</div>
 </div>

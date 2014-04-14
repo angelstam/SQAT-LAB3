@@ -16,7 +16,7 @@
 		</ul>
 		</section>
 	</nav>
-<div class="small-5 small-centered columns">
+<div class="small-12 medium-7 large-6 large-centered medium-centered columns">
 	<div id="completedOrdersTable">
 		<h3>Completed orders</h3>
 		<table id="tableOfStock">
@@ -47,75 +47,78 @@
 		</div>
 	</div>
 </div>
-<div  
-	id="createUserContainer" 
-	ng-show="showAddPersonDiv==true"
-	data-ng-init="loadUserNames()"
-	class="small-2 small-centered columns">
-	
-	<form
-		novalidate 
-		ng-model="addUserForm"
-		ng-submit="addUser(addUserForm,userAlternatives)">
-
-		<div class"row">
-			<div>
-				<input type="text" 
-				ng-model="addUserForm.user"
-				placeholder="User Name" 
-				required/>
-					
-				<p class="errorMessage" 
-				ng-show="addUserForm.user!=null && userNameExistInDB(addUserForm) == true">
-				Sorry, the username [{{createUserForm.user}}] is already taken</p>
-				
-				<input type="password"
-				ng-model="addUserForm.password"
-				placeholder="Password" 
-				required />
-				
-				<input type="password" 
-				ng-model="addUserForm.passwordConfirm"
-				placeholder="Confirm password" 
-				required />
-				
-				<p class="errorMessage" 
-				ng-show="addUserForm.passwordConfirm!=null &&confirmPasswords(addUserForm) == false">
-				You didn't enter the same password in the two password fields</p>
-				
-				<select
-				ng-model="userAlternatives"
-				ng-options="u.name for u in userTypes"
-				required></select>
-
-				<button id="addUserButton"
-				type="submit"
-				ng-disabled="noEmptyFields(addUserForm)==false || userNameExistInDB(addUserForm)==true || confirmPasswords(addUserForm)==false">
-				Add User</button>
-			
-			</div>
-		</div>		
-	</form>
-</div>
-<div  
-	id="createUserContainer" 
-	ng-show="showEditUserDiv==true"
-	data-ng-init="loadUserNames()"
-	class="small-5 small-centered columns">
-	<div id="editButtons" class="medium-5 columns">
-		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('password')">Change Password</button>
-		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('userType')">Change User Type</button>
-		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('remove')">Remove User</button>
-	</div>
-	<div id="editForms" class="medium-5 columns">
+<div class="small-12 medium-7 large-6 large-centered medium-centered columns">
+	<div  
+		id="createUserContainer" 
+		ng-show="showAddPersonDiv==true"
+		data-ng-init="loadUserNames()"
+		class="small-6 medium-7 large-5 columns">
+		
 		<form
 			novalidate 
-			ng-model="passwordForm"
-			ng-show="showChangePassword==true"
-			ng-submit="changePassword(passwordForm)">
+			ng-model="addUserForm"
+			ng-submit="addUser(addUserForm,userAlternatives)">
 
 			<div class"row">
 				<div>
+					<input type="text" 
+					ng-model="addUserForm.user"
+					placeholder="User Name" 
+					required/>
+						
+					<p class="errorMessage" 
+					ng-show="addUserForm.user!=null && userNameExistInDB(addUserForm) == true">
+					Sorry, the username [{{createUserForm.user}}] is already taken</p>
+					
+					<input type="password"
+					ng-model="addUserForm.password"
+					placeholder="Password" 
+					required />
+					
+					<input type="password" 
+					ng-model="addUserForm.passwordConfirm"
+					placeholder="Confirm password" 
+					required />
+					
+					<p class="errorMessage" 
+					ng-show="addUserForm.passwordConfirm!=null &&confirmPasswords(addUserForm) == false">
+					You didn't enter the same password in the two password fields</p>
+					
+					<select
+					ng-model="userAlternatives"
+					ng-options="u.name for u in userTypes"
+					required></select>
+
+					<button id="addUserButton"
+					type="submit"
+					ng-disabled="noEmptyFields(addUserForm)==false || userNameExistInDB(addUserForm)==true || confirmPasswords(addUserForm)==false">
+					Add User</button>
+				
+				</div>
+			</div>		
+		</form>
+	</div>
+</div>
+<div class="small-12 medium-7 large-6 large-centered medium-centered columns">
+	<div  
+		id="createUserContainer" 
+		ng-show="showEditUserDiv==true"
+		data-ng-init="loadUserNames()"
+		class="small-12 columns">
+
+		<div id="editButtons" class="small-6 medium-5 columns">
+			<button id="updateTables" ng-model="getReport" ng-click="showEditOption('password')">Change Password</button>
+			<button id="updateTables" ng-model="getReport" ng-click="showEditOption('userType')">Change User Type</button>
+			<button id="updateTables" ng-model="getReport" ng-click="showEditOption('remove')">Remove User</button>
+		</div>
+		<div id="editForms" class="small-4 medium-6 large-5 columns">
+			<form
+				novalidate 
+				ng-model="passwordForm"
+				ng-show="showChangePassword==true"
+				ng-submit="changePassword(passwordForm)">
+
+				<div class="row">
 					<input type="text" 
 					ng-model="passwordForm.user"
 					placeholder="Username" 
@@ -148,64 +151,63 @@
 					type="submit"
 					ng-disabled="noEmptyFields(passwordForm)==false || userNameExistInDB(passwordForm)==false || confirmPasswords(passwordForm)==false">
 					Update User</button>
-				
-				</div>
-			</div>		
-		</form>
+				</div>		
+			</form>
 
-		<form
-			novalidate 
-			ng-model="userTypeForm"
-			ng-show="showChangeUserType==true"
-			ng-submit="changeUserType(userTypeForm,userAlternatives)">
+			<form
+				novalidate 
+				ng-model="userTypeForm"
+				ng-show="showChangeUserType==true"
+				ng-submit="changeUserType(userTypeForm,userAlternatives)">
 
-			<div class"row">
-				<div>
-					<input type="text" 
-					ng-model="userTypeForm.user"
-					placeholder="Username" 
-					required/>
-						
-					<p class="errorMessage" 
-					ng-show="userTypeForm.user!=null && userNameExistInDB(userTypeForm) == false">
-					Username [{{userTypeForm.user}}] does not exist</p>
+				<div class"row">
+					<div>
+						<input type="text" 
+						ng-model="userTypeForm.user"
+						placeholder="Username" 
+						required/>
+							
+						<p class="errorMessage" 
+						ng-show="userTypeForm.user!=null && userNameExistInDB(userTypeForm) == false">
+						Username [{{userTypeForm.user}}] does not exist</p>
 
-					<select
-					ng-model="userAlternatives"
-					ng-options="u.name for u in userTypes"
-					required></select>
+						<select
+						ng-model="userAlternatives"
+						ng-options="u.name for u in userTypes"
+						required></select>
 
-					<button id="addUserButton"
-					type="submit"
-					ng-disabled="userTypeForm.user==null || userNameExistInDB(userTypeForm)==false">
-					Update User</button>
-				</div>
-			</div>		
-		</form>
-		<form
-			novalidate 
-			ng-model="removeUserForm"
-			ng-show="showRemoveUser==true"
-			ng-submit="removeUser(removeUserForm)">
+						<button id="addUserButton"
+						type="submit"
+						ng-disabled="userTypeForm.user==null || userNameExistInDB(userTypeForm)==false">
+						Update User</button>
+					</div>
+				</div>		
+			</form>
+			<form
+				novalidate 
+				ng-model="removeUserForm"
+				ng-show="showRemoveUser==true"
+				ng-submit="removeUser(removeUserForm)">
 
-			<div class"row">
-				<div>
-					<input type="text" 
-					ng-model="removeUserForm.user"
-					placeholder="Username" 
-					required/>
-						
-					<p class="errorMessage" 
-					ng-show="removeUserForm.user!=null && userNameExistInDB(removeUserForm) == false">
-					Username [{{removeUserForm.user}}] does not exist</p>
+				<div class"row">
+					<div>
+						<input type="text" 
+						ng-model="removeUserForm.user"
+						placeholder="Username" 
+						required/>
+							
+						<p class="errorMessage" 
+						ng-show="removeUserForm.user!=null && userNameExistInDB(removeUserForm) == false">
+						Username [{{removeUserForm.user}}] does not exist</p>
 
-					<button id="addUserButton"
-					type="submit"
-					ng-disabled="removeUserForm.user==null || userNameExistInDB(removeUserForm)==false">
-					Remove User</button>
-				</div>
-			</div>		
-		</form>
+						<button id="addUserButton"
+						type="submit"
+						ng-disabled="removeUserForm.user==null || userNameExistInDB(removeUserForm)==false">
+						Remove User</button>
+					</div>
+				</div>		
+			</form>
+		</div>
 	</div>
 </div>
 
