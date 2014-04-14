@@ -1,9 +1,10 @@
 SQAT-LAB3
 =========
 
-HiT - Software Quality Assurance and Testing - Lab 3: Commission
+##HiT - Software Quality Assurance and Testing - Lab 3: Commission
+This project was created as a laboration exercise in the course *Software Quality Assurance and Testing* at *Harbin Institute of Technology* during March and April in 2014 by Johan Angelstam and Fredrik Rosenqvist.
 
-This is an application created using AngularJS with a MySQL backend.
+This is an application created using AngularJS with a PHP-MySQL backend.
 
 ##JSON REST API
 
@@ -18,3 +19,15 @@ Send an array with the keys (town, locks, stocks, barrels) to create a new order
 
 `GET /commission`
 Returns a list of the commission for all closed months.
+
+## Resources
+* https://github.com/mgonto/restangular
+
+### Charts
+https://github.com/pablojim/highcharts-ng
+https://github.com/bouil/angular-google-chart (probably not offline)
+
+### Authentication and REST and Angular and JSON Web Token (JWT)
+* https://github.com/auth0/auth0-angular
+* http://blog.auth0.com/2014/01/07/angularjs-authentication-with-cookies-vs-token/
+* http://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
