@@ -1,8 +1,12 @@
 describe('basic test on website', function() {
+  var angularPage = require('./AngularPage.js');
+
+  beforeEach(function() {
+    angularPage.navigate();
+  })
 
 //Testing report page
   it('should show table on report page', function() {
-    browser.get('http://localhost/SQAT-LAB3/www/#/');
 
    var reportButton = element(by.id('reportButton'));
    reportButton.click();
@@ -14,7 +18,6 @@ describe('basic test on website', function() {
   });
 
   it('should tell me that the table size is greater than 2', function() {
-    browser.get('http://localhost/SQAT-LAB3/www/#/');
 
    var reportButton = element(by.id('reportButton'));
    reportButton.click();
@@ -25,7 +28,6 @@ describe('basic test on website', function() {
 
 //Testing order page
   it('should tell me that the table size is greater than 2', function() {
-    browser.get('http://localhost/SQAT-LAB3/www/#/');
 
    var reportButton = element(by.id('orderButton'));
    reportButton.click();
