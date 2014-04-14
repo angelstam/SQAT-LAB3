@@ -24,8 +24,9 @@ Returns a list of the commission for all closed months.
 * https://github.com/mgonto/restangular
 
 ### Charts
-https://github.com/pablojim/highcharts-ng
-https://github.com/bouil/angular-google-chart (probably not offline)
+* https://github.com/chinmaymk/angular-charts
+* https://github.com/pablojim/highcharts-ng
+* https://github.com/bouil/angular-google-chart (probably not offline)
 
 ### Authentication and REST and Angular and JSON Web Token (JWT)
 * https://github.com/auth0/auth0-angular
