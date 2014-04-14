@@ -23,6 +23,12 @@ Returns a list of the commission for all closed months.
 ## Resources
 * https://github.com/mgonto/restangular
 
+### Testing Tool
+* https://github.com/angular/protractor
+  - Download and install Node.js from http://nodejs.org/
+  - Install Protractor with `npm install -g protractor`
+  - Start Selenium server with `webdriver-manager start`
+
 ### Charts
 * https://github.com/chinmaymk/angular-charts
 * https://github.com/pablojim/highcharts-ng
