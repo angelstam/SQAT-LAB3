@@ -41,6 +41,10 @@ button{
 	color: red;
 }
 
+#success{
+	color: green;
+}
+
 input.ng-pristine,select.ng-pristine
 {
 	border-color: Gold;

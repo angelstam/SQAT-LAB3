@@ -39,6 +39,8 @@ class RestRouteOrder extends RestRoute
 				open_month_totals
 			WHERE
 				seller=:user
+			ORDER BY 
+				month ASC
 			");
 		$result->bindParam(':user', $data->user, PDO::PARAM_STR);
 		$result->execute();

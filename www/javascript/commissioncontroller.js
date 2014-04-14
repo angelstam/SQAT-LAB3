@@ -439,11 +439,40 @@ app.controller("reportController", function($scope, $http, $location)
 	$scope.stocksPrice=30;
 	$scope.barrelsPrice=25;
 	$scope.showAddPersonDiv=false;
+	$scope.showEditUserDiv=false;
+	$scope.showChangeUserType=false;
+	$scope.showRemoveUser=false;
+	$scope.showChangePassword=false;
 	$scope.showSuccessMessage=false;
+	$scope.addUserForm={};
+	$scope.passwordForm={};
+	$scope.userTypeForm={};
+	$scope.removeUserForm={};
+	$scope.successObject={};
+	$scope.graphSeries=[];
+	$scope.graphXaxis=[];
+	$scope.successObject.showSuccessMessage=false;
 	$scope.userTypes=[
 	{name:'Administrator',userType:'admin'},
 	{name:'Seller',userType:'seller'}
 	];
+
+    $scope.chartConfig = {
+        options: {
+            chart: {
+                type: 'line'
+            }
+        },
+        series:$scope.graphSeries,
+        xAxis: {
+        categories: ['Jan']
+    	},
+        title: {
+            text: 'Sale statistics'
+        },
+
+        loading: false
+    }
 
 	/*
 	This method retrieves the data of ended months 
@@ -453,6 +482,7 @@ app.controller("reportController", function($scope, $http, $location)
 		$http({method: 'GET', url: 'json/commission'}).
 		success(function (data, status, headers, config) {
 			$scope.endedMonthsData=data;
+			$scope.createGraphData($scope.endedMonthsData);
 		}).
 		error(function (data, status, headers, config) {
 		    alert("Failed to retrieve users from the db");
@@ -483,16 +513,68 @@ app.controller("reportController", function($scope, $http, $location)
 		}
 	}
 
-	$scope.showCreateSalesPerson=function(){
+	$scope.createGraphData=function(endedMonthsData){
+		$scope.loadUserNames();
+		angular.forEach($scope.usersInDB,function(value){
+			$scope.graphSeries.push(
+	        	{'name':value.userName,'data':[]}
+	        	);
+		});
+
+		angular.forEach(endedMonthsData,function(value){
+			appendDataForName(value.seller,$scope.calculateTotalSoldValue(value.locks,value.stocks,value.barrels));
+		});
+	}
+
+	function appendDataForName(name,data){
+		angular.forEach($scope.graphSeries,function(serie){
+			if(serie.name==name){
+				serie.data.push(data);
+			}
+		});
+	}
+
+	$scope.showCreateUser=function(){
 		if($scope.showAddPersonDiv==true){
 			$scope.showAddPersonDiv=false;
 		}
 		else{
+			if($scope.showEditUserDiv=true){
+				$scope.showEditUserDiv=false;
+			}
 			$scope.showAddPersonDiv=true;
 			$scope.userAlternatives=$scope.userTypes[1];
 		}
 		$scope.showSuccessMessage=false;
 		
+	}
+
+	$scope.showEditUser=function(){
+		if($scope.showEditUserDiv==true){
+			$scope.showEditUserDiv=false;
+		}
+		else{
+			if($scope.showAddPersonDiv=true){
+				$scope.showAddPersonDiv=false;
+			}
+			$scope.showEditUserDiv=true;
+			$scope.userAlternatives=$scope.userTypes[1];
+		}
+		$scope.showSuccessMessage=false;
+	}
+
+	$scope.showEditOption=function(optionToShow){
+		$scope.successObject.showSuccessMessage=false;
+		$scope.showChangePassword=false;
+		$scope.showChangeUserType=false;
+		$scope.showRemoveUser=false;
+		if(optionToShow=='password'){
+			$scope.showChangePassword=true;
+		}else if(optionToShow=='userType'){
+			$scope.showChangeUserType=true;
+		}else if(optionToShow=='remove'){
+			$scope.showRemoveUser=true;
+		}
 	}
 
 	$scope.loadUserNames=function(){
@@ -506,19 +588,44 @@ app.controller("reportController", function($scope, $http, $location)
 	}
 
 	/*
+	Checks if there are any empty fields.
+	Returns true if there are no empty fields.
+	Returns false if any one field is empty.
+	*/
+	$scope.noEmptyFields=function(userForm)
+	{	
+		var noEmptyFields=true;
+		
+		if(userForm.user==null){
+				noEmptyFields=false;
+		}
+		if(userForm.password==null){
+				noEmptyFields=false;
+		}
+		if(userForm.passwordConfirm==null){
+				noEmptyFields=false;
+		}
+		return noEmptyFields;
+	}
+
+	/*
 	This method will check if the new userName is unique in the 
 	on the server detabase
 	*/
-	$scope.checkNewUsernameValidity=function(userForm)
+	$scope.userNameExistInDB=function(userForm)
 	{	
-		var validNewUserName=true;
-		
-		angular.forEach($scope.usersInDB,function(value){
-			if(userForm.user==value.name){
-				validNewUserName=false;
-			}
-		});
-		return validNewUserName;
+		if(userForm.user!=null){
+			var userNameExists=false;
+			angular.forEach($scope.usersInDB,function(value){
+				if(userForm.user==value.userName){
+					userNameExists=true;
+				}
+			});
+		}else
+		{
+			var userNameExists=false;
+		}
+		return userNameExists;
 	}
 
 	/*
@@ -527,7 +634,7 @@ app.controller("reportController", function($scope, $http, $location)
 	$scope.confirmPasswords=function(userForm)
 	{
 		var passwordMatch = false;
-		if(userForm.password==userForm.passwordConfirm){
+		if(userForm.password!=null && userForm.passwordConfirm!=null && userForm.password==userForm.passwordConfirm){
 			passwordMatch = true;
 		}
 		return passwordMatch;
@@ -539,32 +646,57 @@ app.controller("reportController", function($scope, $http, $location)
 		$http({method: 'POST', url: 'json/login/addNewUser', data: userForm}).
 		success(function (data, status, headers, config) {
 			$scope.showAddPersonDiv=false;
-			$scope.showSuccessMessage=true;
+			$scope.successObject.message="The new user was added";
+			$scope.successObject.showSuccessMessage=true;
 		}).
 		error(function (data, status, headers, config) {
 		    alert("Failed to retrieve users from the db");
 		});	
 	}
 
-	/*
-	Checks if there are any empty fields.
-	Returns true if there are no empty fields.
-	Returns false if any one field is empty.
-	*/
-	$scope.noEmptyFields=function(userForm)
-	{	
-		var isNotNull=true;
-		
-		if(userForm.user==null){
-				isNotNull=false;
+	$scope.changePassword=function(userForm){	
+		$http({method: 'POST', url: 'json/login/changePassword', data: userForm}).
+		success(function (data, status, headers, config) {
+			$scope.showChangePassword=false;
+			$scope.showEditUserDiv=false;
+			$scope.successObject.message="The password was changed";
+			$scope.successObject.showSuccessMessage=true;
+		}).
+		error(function (data, status, headers, config) {
+		    alert("Failed to change password");
+		});	
+	}
+
+	$scope.changeUserType=function(userForm,userAlternatives){
+		userForm.userType=userAlternatives.userType;
+		$http({method: 'POST', url: 'json/login/changeUsertype', data: userForm}).
+		success(function (data, status, headers, config) {
+			$scope.showChangeUserType=false;
+			$scope.showEditUserDiv=false;
+			$scope.successObject.message="The user type was changed";
+			$scope.successObject.showSuccessMessage=true;
+		}).
+		error(function (data, status, headers, config) {
+		    alert("Failed to change user type");
+		});	
+	}
+
+	$scope.removeUser=function(userForm){
+
+		if (confirm('Are you sure you want to remove '+userForm.user+' from the database?')) {
+		    $http({method: 'POST', url: 'json/login/removeUser', data: userForm}).
+			success(function (data, status, headers, config) {
+			$scope.showRemoveUser=false;
+			$scope.showEditUserDiv=false;
+			$scope.successObject.message="The user was removed";
+			$scope.successObject.showSuccessMessage=true;
+			}).
+			error(function (data, status, headers, config) {
+			    alert("Failed to remove user");
+			});	
+		} else {
+		    // Do nothing!
 		}
-		if(userForm.password==null){
-				isNotNull=false;
-		}
-		if(userForm.passwordConfirm==null){
-				isNotNull=false;
-		}
-		return isNotNull;
 	}
 
 	/*

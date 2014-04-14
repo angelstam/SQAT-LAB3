@@ -42,8 +42,8 @@
 			</tr>
 		</table>
 		<div id="actionButtons">
-			<button id="updateTables" ng-model="getReport" ng-click="getEndedMonths()">Update</button>
-			<button id="updateTables" ng-model="getReport" ng-click="showCreateSalesPerson()">Add new salesperson</button>
+			<button id="updateTables" ng-model="getReport" ng-click="showCreateUser()">Add new salesperson</button>
+			<button id="updateTables" ng-model="getReport" ng-click="showEditUser()">Edit User</button>
 		</div>
 	</div>
 </div>
@@ -52,40 +52,35 @@
 	ng-show="showAddPersonDiv==true"
 	data-ng-init="loadUserNames()"
 	class="small-2 small-centered columns">
-
-	<form name="createUserForm" 
+	
+	<form
 		novalidate 
-		ng-model="createUserForm"
-		ng-submit="addUser(createUserForm,userAlternatives)">
+		ng-model="addUserForm"
+		ng-submit="addUser(addUserForm,userAlternatives)">
 
 		<div class"row">
 			<div>
-				
 				<input type="text" 
-				ng-model="createUserForm.user"
-				name="createUserForm.user"
+				ng-model="addUserForm.user"
 				placeholder="User Name" 
 				required/>
 					
 				<p class="errorMessage" 
-				ng-show="checkNewUsernameValidity(createUserForm) == false">
+				ng-show="addUserForm.user!=null && userNameExistInDB(addUserForm) == true">
 				Sorry, the username [{{createUserForm.user}}] is already taken</p>
 				
 				<input type="password"
-				id="createUserForm.password"
-				ng-model="createUserForm.password"
-				name="createUserForm.password" 
+				ng-model="addUserForm.password"
 				placeholder="Password" 
 				required />
 				
 				<input type="password" 
-				ng-model="createUserForm.passwordConfirm"
-				name="createUserForm.passwordConfirm" 
+				ng-model="addUserForm.passwordConfirm"
 				placeholder="Confirm password" 
 				required />
 				
 				<p class="errorMessage" 
-				ng-show="confirmPasswords(createUserForm) == false">
+				ng-show="addUserForm.passwordConfirm!=null &&confirmPasswords(addUserForm) == false">
 				You didn't enter the same password in the two password fields</p>
 				
 				<select
@@ -95,16 +90,131 @@
 
 				<button id="addUserButton"
 				type="submit"
-				ng-disabled="!(noEmptyFields(createUserForm) &&
-				checkNewUsernameValidity(createUserForm) &&
-				confirmPasswords(createUserForm))">
+				ng-disabled="noEmptyFields(addUserForm)==false || userNameExistInDB(addUserForm)==true || confirmPasswords(addUserForm)==false">
 				Add User</button>
 			
 			</div>
 		</div>		
 	</form>
 </div>
+<div  
+	id="createUserContainer" 
+	ng-show="showEditUserDiv==true"
+	data-ng-init="loadUserNames()"
+	class="small-5 small-centered columns">
+	<div id="editButtons" class="medium-5 columns">
+		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('password')">Change Password</button>
+		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('userType')">Change User Type</button>
+		<button id="updateTables" ng-model="getReport" ng-click="showEditOption('remove')">Remove User</button>
+	</div>
+	<div id="editForms" class="medium-5 columns">
+		<form
+			novalidate 
+			ng-model="passwordForm"
+			ng-show="showChangePassword==true"
+			ng-submit="changePassword(passwordForm)">
 
-<div id="sucessMessage" class="small-2 small-centered columns" ng-an ng-show="showSuccessMessage==true">
-The user was added
+			<div class"row">
+				<div>
+					<input type="text" 
+					ng-model="passwordForm.user"
+					placeholder="Username" 
+					required/>
+						
+					<p class="errorMessage" 
+					ng-show="passwordForm.user!=null && userNameExistInDB(passwordForm) == false">
+					Username [{{passwordForm.user}}] does not exist</p>
+					
+					<input type="password"
+					ng-model="passwordForm.oldPassword"
+					placeholder="Old Password" 
+					required />
+					
+					<input type="password" 
+					ng-model="passwordForm.password"
+					placeholder="New Password" 
+					required />
+
+					<input type="password" 
+					ng-model="passwordForm.passwordConfirm"
+					placeholder="Confirm New Password" 
+					required />
+					
+					<p class="errorMessage" 
+					ng-show="passwordForm.passwordConfirm!=null && confirmPasswords(passwordForm) == false">
+					You didn't enter the same password in the two password fields</p>
+
+					<button id="addUserButton"
+					type="submit"
+					ng-disabled="noEmptyFields(passwordForm)==false || userNameExistInDB(passwordForm)==false || confirmPasswords(passwordForm)==false">
+					Update User</button>
+				
+				</div>
+			</div>		
+		</form>
+
+		<form
+			novalidate 
+			ng-model="userTypeForm"
+			ng-show="showChangeUserType==true"
+			ng-submit="changeUserType(userTypeForm,userAlternatives)">
+
+			<div class"row">
+				<div>
+					<input type="text" 
+					ng-model="userTypeForm.user"
+					placeholder="Username" 
+					required/>
+						
+					<p class="errorMessage" 
+					ng-show="userTypeForm.user!=null && userNameExistInDB(userTypeForm) == false">
+					Username [{{userTypeForm.user}}] does not exist</p>
+
+					<select
+					ng-model="userAlternatives"
+					ng-options="u.name for u in userTypes"
+					required></select>
+
+					<button id="addUserButton"
+					type="submit"
+					ng-disabled="userTypeForm.user==null || userNameExistInDB(userTypeForm)==false">
+					Update User</button>
+				</div>
+			</div>		
+		</form>
+		<form
+			novalidate 
+			ng-model="removeUserForm"
+			ng-show="showRemoveUser==true"
+			ng-submit="removeUser(removeUserForm)">
+
+			<div class"row">
+				<div>
+					<input type="text" 
+					ng-model="removeUserForm.user"
+					placeholder="Username" 
+					required/>
+						
+					<p class="errorMessage" 
+					ng-show="removeUserForm.user!=null && userNameExistInDB(removeUserForm) == false">
+					Username [{{removeUserForm.user}}] does not exist</p>
+
+					<button id="addUserButton"
+					type="submit"
+					ng-disabled="removeUserForm.user==null || userNameExistInDB(removeUserForm)==false">
+					Remove User</button>
+				</div>
+			</div>		
+		</form>
+	</div>
 </div>
+
+<div id="success" class="small-2 small-centered columns" ng-an ng-show="successObject.showSuccessMessage==true">
+<b>{{successObject.message}}</b>
+</div>
+
+<!-- Graph of sold data under construction
+<div class="row">
+    <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+</div>
+-->

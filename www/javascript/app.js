@@ -1,4 +1,4 @@
-var app = angular.module('commissionApp', ['ngRoute']);
+var app = angular.module('commissionApp', ['ngRoute','highcharts-ng']);
 
 // configure our routes
 app.config(function($routeProvider) {
