@@ -196,6 +196,7 @@ app.controller("orderController", function($scope, $http, $location)
 			return false;
 		}
 
+		alert(2);
 		/*
 		Check that locks order don't exceed stock limit
 		*/
@@ -310,11 +311,7 @@ app.controller("orderController", function($scope, $http, $location)
 		success(function (data, status, headers, config) {
 		   $scope.currentMonthOrder=data;
 		   $scope.getOpenMonths();
-		   $scope.calculateItemsLeftInStock();
-		   if(callback!=null)
-		   {
-		   		callback();
-		   }
+		   $scope.calculateItemsLeftInStock(callback);
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
@@ -351,7 +348,7 @@ app.controller("orderController", function($scope, $http, $location)
 		});
 	}
 
-	$scope.calculateItemsLeftInStock=function()
+	$scope.calculateItemsLeftInStock=function(callback)
 	{
 		$http({method: 'POST', url: 'json/order/getMonthsSales', data:{'month':$scope.monthToProcess}}).
 		success(function (data, status, headers, config) {
@@ -359,6 +356,10 @@ app.controller("orderController", function($scope, $http, $location)
 		   	$scope.stock.locksLeft=$scope.stock.locksMax-$scope.monthSales[0].locks;
 			$scope.stock.stocksLeft=$scope.stock.stocksMax-$scope.monthSales[0].stocks;
 			$scope.stock.barrelsLeft=$scope.stock.barrelsMax-$scope.monthSales[0].barrels;
+			if(callback!=null)
+		   	{
+		   		callback();
+		   	}
 		}).
 		error(function (data, status, headers, config) {
 		    // ...
