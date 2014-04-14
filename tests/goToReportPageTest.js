@@ -4,8 +4,8 @@ describe('basic test on website', function() {
   beforeEach(function() {
     angularPage.navigate();
   })
-  
-  it('go to report page', function() {
+
+  it('should go to report page', function() {
    /*
       Logging in
     */
