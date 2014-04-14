@@ -9,8 +9,8 @@ app.controller("orderController", function($scope, $http, $location)
 	$scope.leftInStock=null;
 	$scope.commissionInformation=null;
 	$scope.numberFormat = /^([1-9]{1}|[1-9]{1}[0-9]{1})$/;
-	$scope.errorObject={};
-	$scope.errorObject.errorHasOccured=false;
+	$scope.errorObject={'errorHasOccured':false};
+	$scope.successObject={'showSuccessMessage':false};
 	$scope.endedMonthsData;
 	$scope.monthToProcess=null;
 	$scope.orderIsAdded=false;
@@ -109,6 +109,10 @@ app.controller("orderController", function($scope, $http, $location)
 				formData.barrels=null;
 				$scope.orderIsAdded=true;
 				$scope.setCurrentOpenOrderMonth($scope.openMonthSelected);	
+				
+				$scope.successObject.message="The order was added"
+				$scope.successObject.showSuccessMessage=true;
+
 			}).
 			error(function (data, status, headers, config) {
 			    alert("The order failed");
@@ -195,8 +199,7 @@ app.controller("orderController", function($scope, $http, $location)
 			$scope.errorObject.errorHasOccured=true;
 			return false;
 		}
-
-		alert(2);
+		
 		/*
 		Check that locks order don't exceed stock limit
 		*/

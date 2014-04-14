@@ -2,7 +2,7 @@
 		<section class="top-bar-section">
 			<ul class="right">
 				<li class="userName">
-				<a>Welcome {{getCookie('user')}}!</a>
+				<a id="welcomeMessage">Welcome {{getCookie('user')}}!</a>
 				</li>
 				<li class="logOutButton">
 				<a ng-click="redirect('logout')">Log out</a>
@@ -11,14 +11,14 @@
 
 		<ul class="left">
 			<li class="name" ng-show="getCookie('userType')=='admin'">
-				<h1><a href="#report">Report</a></h1>
+				<h1><a id="reportButton" href="#report">Report</a></h1>
 			</li>
 		</ul>
 		</section>
 	</nav>
 <div id="userStatistics" class="small-7 small-centered columns">
 	<div>
-		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button>
+		<button class="openMonthTabs" ng-repeat="(rowId, orderMonth) in openMonths" ng-click="setCurrentOpenOrderMonth(rowId)">{{orderMonth.month}}</button> 
 	</div>
 
 	<div ng-hide="openMonthSelected == null">
@@ -64,7 +64,7 @@
 			</div>
 		</div>
 		<div id="endMonthButton">
-			<button id="placeOrderButton" ng-model="placeOrder" ng-click="endMonth()">End monthly sales</button>
+			<button id="endMonthButton" ng-model="endMonth" ng-click="endMonth()">End monthly sales</button>
 		</div>
 	</div>
 	<div id="noCurrentMonth" ng-show="openMonthSelected == null"> <h3>Select month to show orders</h3> 
@@ -73,9 +73,6 @@
 <div id="order" class="small-7 small-centered columns">
 		<div id="tableLogo">
 			<h3>Create new order</h3>
-			<div class="statusBar" ng-show="orderIsAdded == true" >
-				<p>The order was added!</p>
-			</div>
 		</div>
 		<div id="orderFormDiv">
 			<form class="small-9 columns" name="orderForm1" novalidate id="locationInformation">
@@ -91,7 +88,10 @@
 		<div class="actionButtonsDiv" >
 			<button id="placeOrderButton" ng-model="placeOrder" ng-click="processOrder(orderForm)">Place Order</button>
 		</div>
-		<div id="error" class="small-7 small-centered columns" ng-show="errorObject.errorHasOccured==true"><b>##ERROR## {{errorObject.message}}</b>
+		<div class="alert-box warning radius small-7 small-centered columns" ng-show="errorObject.errorHasOccured"><em id="errorMessage">##ERROR## {{errorObject.message}}</em>
+		</div>
+		<div class="alert-box success radius small-7 small-centered columns" ng-show="successObject.showSuccessMessage" >
+			<em id="successMessage">{{successObject.message}}</em>
 		</div>
 	</div>
 </div>
