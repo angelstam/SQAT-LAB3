@@ -23,11 +23,13 @@ Returns a list of the commission for all closed months.
 ## Resources
 * https://github.com/mgonto/restangular
 
-### Testing Tool
-* https://github.com/angular/protractor
+### Testing Tools
+* E2E-testing: https://github.com/angular/protractor
   - Download and install Node.js from http://nodejs.org/
   - Install Protractor with `npm install -g protractor`
   - Start Selenium server with `webdriver-manager start`
+* Unit Tests: http://phpunit.de/
+  - Install using these instructions http://phpunit.de/getting-started.html
 
 ### Charts
 * https://github.com/chinmaymk/angular-charts
