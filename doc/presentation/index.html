@@ -99,6 +99,7 @@ exports.config = {
 }
 </code></pre>
 				</section>
+			<section>
 				<section>
 					<h3>Example of test case</h3>
 					<pre><code class="javascript">// loginTest.js
@@ -126,7 +127,31 @@ describe('basic test on website', function() {
   });
 });
 </code></pre>
+					
 				</section>
+				<section>
+					<h2>Important parts</h2>
+					<h3>Describe statement</h3>
+					<pre><code class="javascript">describe('basic test on website', function() {
+  						...
+});
+</code></pre>
+		<h3>it statement</h3>
+					<pre><code class="javascript">		.
+					.
+					.
+ it('should should be able to log in', function() {
+	
+	/*Things you would like to the browser to do*/
+	
+	var loginButton = element(by.id('loginUserButton'));
+	loginButton.click();
+   					
+	expect(welcomeMessage.isDisplayed()).toEqual(true);
+ });
+</code></pre>
+					</section>
+			</section>
 				<section>
 					<h3>Run the tests</h3>
 					<pre><code class="javascript">$ protractor tests/myConf.js
@@ -148,7 +173,13 @@ Finished in 5.793 seconds
 						<h2>Software structure</h2>
 						<ul>
 							<li>Web-application</li>
-							<li>AngularJS</li>
+							<li>AngularJS
+								<ul>
+									<li>Relatively new</li>
+									<li>First release 2010</li>
+								</ul>
+							</li>
+							<li>MVC</li>
 							<li>
 								3 Modules
 								<ul>
