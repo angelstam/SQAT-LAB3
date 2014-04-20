@@ -1,0 +1,124 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[swedish]{babel}
+%\usepackage[utf8]{inputenc}
+
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage[margin=30mm]{geometry}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex}
+
+%For verbatimtabinput 
+\usepackage{fancyvrb}
+
+%For source code listings
+\usepackage{listings}
+
+\usepackage{fontspec}
+\usepackage{minted}
+\newminted{javascript}{mathescape,
+               linenos,
+               numbersep=5pt,
+               frame=lines,
+               framesep=2mm,
+               fontsize=\footnotesize}
+
+\setsansfont{Calibri}
+\setmonofont{Consolas}
+
+
+\usepackage{fancyhdr}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+\lhead{\footnotesize Protractor: A Testing Tool for AngularJS}
+\rhead{\footnotesize Johan Angelstam <johan791@student.liu.se>}
+
+\usepackage{rotating}
+\usepackage{pdflscape}
+
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,topaths}
+\tikzstyle{block} = [rectangle, draw, 
+    text width=14em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{line} = [draw, -latex']
+
+\usepackage{subfig}
+
+%\usepackage[listings]{tcolorbox}
+
+\title{Protractor: A Testing Tool for AngularJS}
+\author{Johan Angelstam <johan791@student.liu.se>}
+\date{2014-04-18}
+
+\begin{document}
+
+\renewcommand{\theFancyVerbLine}{
+  \sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
+
+\maketitle
+
+\begin{javascriptcode}
+// myConf.js
+exports.config = {
+  seleniumAddress: 'http://localhost:4444/wd/hub',
+  capabilities: { 'browserName': 'firefox' },
+  specs: ['*Test.js']
+}
+\end{javascriptcode}
+
+
+\begin{javascriptcode}
+// loginTest.js
+describe('basic test on website', function() {
+  var angularPage = require('./AngularPage.js');
+
+  beforeEach(function() {
+    angularPage.navigate();
+  })
+
+  //Testing to log in
+  it('should should be able to log in', function() {
+
+    var userNameField = element(by.model('loginUserForm.user'));
+    userNameField.sendKeys('fredrik');
+
+    var passwordField = element(by.model('loginUserForm.password'));
+    passwordField.sendKeys('123');
+
+    var loginButton = element(by.id('loginUserButton'));
+    loginButton.click();
+
+    var welcomeMessage = element(by.id('welcomeMessage'));
+    expect(welcomeMessage.isDisplayed()).toEqual(true);
+  });
+});
+\end{javascriptcode}
+
+\begin{javascriptcode}
+describe('basic test on website', function() {
+  						...
+});
+\end{javascriptcode}
+
+\begin{javascriptcode}
+ it('should should be able to log in', function() {
+	
+	/*Things you would like to the browser to do*/
+	
+	var loginButton = element(by.id('loginUserButton'));
+	loginButton.click();
+   					
+	expect(welcomeMessage.isDisplayed()).toEqual(true);
+ });
+\end{javascriptcode}
+
+
+\end{enumerate}
+
+\end{document}
